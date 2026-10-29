@@ -26,6 +26,7 @@ El formato registra eventos **comprobados** separadamente de los planes.
 ### Estado
 
 - Raspberry y Windows aparecen en la tailnet; ping, TCP/22 y login SSH por clave funcionan sobre Tailscale estando en LAN. Faltan red externa, reconexión tras reinicio y endurecimiento SSH del servidor.
+- El usuario comunica que un SSD conectado por USB no se reconoce o no puede utilizarse. Diagnóstico y causa pendientes; se añade INC-006 con comprobaciones de solo lectura.
 - Codex no ejecutó operaciones sobre la Raspberry; la instalación la realizó el usuario.
 
 ## [0.1.0] — 2026-10-29

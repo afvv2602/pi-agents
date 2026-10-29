@@ -39,7 +39,7 @@ El repositorio está pensado como evidencia verificable de **administración Lin
 | Equipo | Raspberry Pi 4 Model B, 4 GB RAM |
 | Arquitectura | ARM64 / `aarch64` |
 | Sistema operativo | DietPi v10.8.2, basado en Debian 13 (Trixie) |
-| Almacenamiento | microSD ~64 GB; futura migración a SSD por valorar |
+| Almacenamiento | microSD ~64 GB; el usuario comunica un SSD conectado por USB que aún no logra utilizar (detección y montaje por diagnosticar) |
 | Conectividad | Wi-Fi (`wlan0`), dirección por DHCP con reserva en router |
 | Hostname | `pi-agents` |
 | Administración | Windows + PowerShell + OpenSSH |
