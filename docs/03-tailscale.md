@@ -1,6 +1,6 @@
 # 03 — Acceso remoto con Tailscale
 
-**Estado: comprobaciones previas realizadas; instalación pendiente.** Guía revisada el 2026-10-29 contra documentación oficial. El usuario ejecuta los comandos en la Raspberry y comparte resultados; Codex documenta los resultados y prepara los siguientes pasos.
+**Estado: Tailscale instalado en la Raspberry; adhesión a la tailnet y pruebas pendientes.** Guía revisada el 2026-10-29 contra documentación oficial. El usuario ejecuta los comandos en la Raspberry y comparte resultados; Codex documenta los resultados y prepara los siguientes pasos.
 
 ## Objetivo y decisiones
 
@@ -22,9 +22,9 @@ Confirmar espacio libre, hora sincronizada y ausencia de paquetes a medio config
 
 **Resultados observados en captura aportada por el usuario (2026-10-29):** sesión SSH como `piadmin` en `pi-agents`; `hostname` devuelve `pi-agents`; `/etc/os-release` indica Debian GNU/Linux 13 (Trixie), versión completa 13.7; la raíz tiene aproximadamente 55 GB libres (2 % de uso); `timedatectl status` muestra `Europe/Madrid` y `System clock synchronized: yes`; `sudo dpkg --audit` termina sin salida. `NTP service: inactive` también aparece, pero no contradice por sí solo el estado sincronizado. La captura **no** confirma la versión de DietPi, el nivel de actualizaciones APT ni que SSH use exclusivamente clave.
 
-**Siguiente paso pendiente:** abrir `sudo dietpi-software`, seleccionar Tailscale y confirmar la instalación, manteniendo disponible SSH local. El usuario ejecutará la operación.
+**Siguiente paso realizado:** el usuario instaló Tailscale mediante `sudo dietpi-software`, manteniendo disponible SSH local.
 
-## 1. Instalar en DietPi (pendiente)
+## 1. Instalar en DietPi (completado el 2026-10-29)
 
 La [guía oficial de DietPi](https://dietpi.com/docs/software/vpn/) incluye Tailscale entre sus paquetes optimizados. Desde la sesión SSH local:
 
@@ -40,6 +40,8 @@ tailscale version
 ```
 
 Si el servicio no está activo, revisar `sudo systemctl status tailscaled` y `sudo journalctl -u tailscaled --no-pager -n 50` antes de avanzar.
+
+**Resultado observado en captura aportada por el usuario:** DietPi-Software indica `Install completed`; `systemctl is-active tailscaled` devuelve `active`; `tailscale version` informa 1.104.4. Esto verifica instalación y servicio activo en ese momento, pero no confirma aún que la Raspberry esté unida a la tailnet ni que el servicio sobreviva a un reinicio.
 
 ## 2. Unir la Raspberry a la tailnet (pendiente)
 
