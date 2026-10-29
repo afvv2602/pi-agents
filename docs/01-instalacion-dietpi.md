@@ -47,6 +47,10 @@ ip route
 - Conexión SSH comprobada desde Windows.
 - Usuario `piadmin` con `sudo` confirmado.
 
+### Nueva comprobación previa a Tailscale (2026-10-29)
+
+Captura de terminal aportada por el usuario: `hostname` devuelve `pi-agents`; `/etc/os-release` identifica Debian GNU/Linux 13 (Trixie), versión completa 13.7; `df -h /` muestra aproximadamente 55 GB disponibles y 2 % de uso; `timedatectl status` indica `Europe/Madrid` y reloj sincronizado; `sudo dpkg --audit` termina sin salida. La sesión aparece como `piadmin` en `pi-agents`. Esta comprobación no confirma la versión actual de DietPi ni el estado de las actualizaciones APT.
+
 `NTP service: inactive` fue observado con `System clock synchronized: yes`: no concluir que el reloj está mal por ese campo aislado. El arranque inicial sí encontró un error NTP; ver incidencias.
 
 ## Actualizaciones (verificación pendiente)

@@ -4,6 +4,11 @@ El formato registra eventos **comprobados** separadamente de los planes.
 
 ## [Sin publicar] — 2026-10-29
 
+### Comprobaciones observadas
+
+- Captura aportada por el usuario antes de instalar Tailscale: sesión SSH como `piadmin`, hostname `pi-agents`, Debian 13 (Trixie) 13.7, ~55 GB libres, reloj sincronizado en `Europe/Madrid` y `sudo dpkg --audit` sin salida.
+- Estas pruebas no confirman aún el nivel de actualizaciones APT, el uso exclusivo de clave SSH ni la instalación de Tailscale.
+
 ### Documentación
 
 - Revisada la guía de Tailscale con fuentes oficiales de DietPi y Tailscale: comprobaciones previas, instalación, autenticación, pruebas por capas, red externa, reinicio y recuperación.

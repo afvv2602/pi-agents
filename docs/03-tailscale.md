@@ -1,12 +1,12 @@
 # 03 — Acceso remoto con Tailscale
 
-**Estado: pendiente de ejecutar.** Guía revisada el 2026-10-29 contra documentación oficial. Esta revisión no instala software ni cambia el servidor.
+**Estado: comprobaciones previas realizadas; instalación pendiente.** Guía revisada el 2026-10-29 contra documentación oficial. El usuario ejecuta los comandos en la Raspberry y comparte resultados; Codex documenta los resultados y prepara los siguientes pasos.
 
 ## Objetivo y decisiones
 
 Acceder a `pi-agents` por SSH convencional desde Windows, incluso fuera de la LAN, sin redirigir TCP/22 en el router. Mantener `ssh pi-agents-local` operativo. No activar Tailscale SSH (`tailscale set --ssh`), exit node ni subnet router. Ver [ADR-0002](adr/0002-acceso-remoto-tailscale.md).
 
-## 0. Antes de instalar (pendiente)
+## 0. Antes de instalar (comprobado parcialmente el 2026-10-29)
 
 Desde PowerShell, comprobar `ssh pi-agents-local` y conservar esa sesión abierta durante la instalación. En la Raspberry, revisar:
 
@@ -15,9 +15,14 @@ hostname
 cat /etc/os-release
 df -h /
 timedatectl status
+sudo dpkg --audit
 ```
 
-Confirmar espacio libre, hora sincronizada y ausencia de cambios APT interrumpidos. Si aparece un problema, resolverlo antes de seguir. La instalación, autenticación y eventual reinicio requieren una sesión autorizada con acceso al equipo.
+Confirmar espacio libre, hora sincronizada y ausencia de paquetes a medio configurar. Si aparece un problema, resolverlo antes de seguir.
+
+**Resultados observados en captura aportada por el usuario (2026-10-29):** sesión SSH como `piadmin` en `pi-agents`; `hostname` devuelve `pi-agents`; `/etc/os-release` indica Debian GNU/Linux 13 (Trixie), versión completa 13.7; la raíz tiene aproximadamente 55 GB libres (2 % de uso); `timedatectl status` muestra `Europe/Madrid` y `System clock synchronized: yes`; `sudo dpkg --audit` termina sin salida. `NTP service: inactive` también aparece, pero no contradice por sí solo el estado sincronizado. La captura **no** confirma la versión de DietPi, el nivel de actualizaciones APT ni que SSH use exclusivamente clave.
+
+**Siguiente paso pendiente:** abrir `sudo dietpi-software`, seleccionar Tailscale y confirmar la instalación, manteniendo disponible SSH local. El usuario ejecutará la operación.
 
 ## 1. Instalar en DietPi (pendiente)
 

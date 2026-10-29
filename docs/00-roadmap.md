@@ -16,7 +16,7 @@ Actualizado: 2026-10-29. **✅** confirmado por la documentación de la instalac
 | 9. Obsidian | ⏳ | Lectura, dry-run, diff, aprobación y rollback sobre copia del vault | Pruebas sin datos privados |
 | 10. Inferencia externa | ⏳ | Llamada a servicio remoto con timeouts y fallo controlado | Pruebas de error y coste documentado |
 
-Los hitos 2 y 3 se pueden verificar en paralelo con el hito 4, pero no se marcarán completados por el solo hecho de que Tailscale funcione. Ningún hito futuro implica despliegue automático del siguiente.
+El 2026-10-29 se comprobaron el espacio libre, el reloj sincronizado y `sudo dpkg --audit` sin incidencias mediante captura del usuario. El hito 2 permanece 🟡 hasta revisar actualizaciones y versiones. Los hitos 2 y 3 se pueden verificar en paralelo con el hito 4, pero no se marcarán completados por el solo hecho de que Tailscale funcione. Ningún hito futuro implica despliegue automático del siguiente.
 
 ## Entregables de cada hito
 
