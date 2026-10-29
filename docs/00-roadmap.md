@@ -8,7 +8,7 @@ Actualizado: 2026-10-29. **✅** confirmado por la documentación de la instalac
 | 1. Usuario y DHCP | ✅ | `piadmin` puede usar `sudo`; reserva asociada a `wlan0` | `sudo whoami`; prueba LAN tras nueva concesión |
 | 2. Estado de paquetes | 🟡 | APT sin tareas interrumpidas y actualizaciones revisadas | Fecha, versiones y resultado de revisión |
 | 3. SSH por clave | 🟡 | Nueva sesión con clave; contraseña de cuenta rechazada tras endurecimiento autorizado | Pruebas positivas y negativas, vía de recuperación |
-| 4. Tailscale | 🟡 | SSH por IP Tailscale desde otra red; servicio recuperado tras reinicio; SSH local conservado; sin puerto WAN publicado | Instalación DietPi completada, `tailscaled` activo, versión 1.104.4 y Raspberry conectada a la tailnet; faltan Windows y pruebas de [aceptación](03-tailscale.md#criterios-de-aceptación) |
+| 4. Tailscale | 🟡 | SSH por IP Tailscale desde otra red; servicio recuperado tras reinicio; SSH local conservado; sin puerto WAN publicado | Instalación DietPi y adhesión completadas; `tailscale status` en Windows enumera ambos dispositivos. Faltan ruta, SSH y pruebas de [aceptación](03-tailscale.md#criterios-de-aceptación) |
 | 5. Copias y observabilidad | ⏳ | Backup fuera de microSD restaurado en prueba; espacio, logs y salud visibles | Registro de restauración y controles |
 | 6. Docker Compose | ⏳ | Imagen ARM64 de prueba arranca, reinicia, registra logs y conserva datos | Archivo Compose, comandos y salida redactada |
 | 7. API FastAPI | ⏳ | Healthcheck y endpoint autenticado; acceso limitado a la red autorizada | Pruebas de éxito y rechazo |

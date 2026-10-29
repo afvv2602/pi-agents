@@ -9,6 +9,7 @@ El formato registra eventos **comprobados** separadamente de los planes.
 - Captura aportada por el usuario antes de instalar Tailscale: sesión SSH como `piadmin`, hostname `pi-agents`, Debian 13 (Trixie) 13.7, ~55 GB libres, reloj sincronizado en `Europe/Madrid` y `sudo dpkg --audit` sin salida.
 - Captura aportada tras instalar con `dietpi-software`: instalador finalizado, `tailscaled` activo y cliente Tailscale 1.104.4. En ese momento aún no se había comprobado la adhesión a la tailnet.
 - Capturas posteriores: `sudo tailscale up` finalizó correctamente; `tailscale status` e `ip -4` devolvieron datos del nodo y la consola **Machines** muestra `pi-agents` conectado. IP, cuenta y URL de autenticación omitidas deliberadamente.
+- Captura de PowerShell: `tailscale status` enumera el cliente Windows y `pi-agents` en la misma tailnet. Aún no se ha probado tráfico entre ellos ni SSH.
 - Estas pruebas no confirman aún el nivel de actualizaciones APT, el uso exclusivo de clave SSH ni el acceso remoto por Tailscale.
 
 ### Documentación
@@ -20,7 +21,7 @@ El formato registra eventos **comprobados** separadamente de los planes.
 
 ### Estado
 
-- La Raspberry ya está unida a la tailnet; faltan el cliente Windows, las pruebas de conectividad y el endurecimiento SSH.
+- Raspberry y Windows aparecen en la tailnet; faltan las pruebas de conectividad, red externa y el endurecimiento SSH.
 - Codex no ejecutó operaciones sobre la Raspberry; la instalación la realizó el usuario.
 
 ## [0.1.0] — 2026-10-29

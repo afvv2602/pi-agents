@@ -26,7 +26,7 @@ El repositorio está pensado como evidencia verificable de **administración Lin
 | Autenticación SSH exclusivamente por clave | 🟡 Pendiente de verificar y endurecer | Comprobar autenticación forzada; deshabilitar contraseña solo después |
 | Actualizaciones pendientes/estado APT | 🟡 Pendiente de comprobar | Verificar versiones y estado de paquetes |
 | Comprobaciones previas a Tailscale | ✅ Parcialmente comprobadas | Captura del 2026-10-29: Debian 13.7, hora sincronizada, ~55 GB libres y `dpkg --audit` sin incidencias; nivel de actualizaciones aún pendiente |
-| Tailscale y acceso desde otra red | 🟡 Raspberry conectada; acceso pendiente | DietPi completó la instalación; `tailscaled` activo, versión 1.104.4. `tailscale up` finalizó y la consola muestra `pi-agents` conectado. Falta añadir Windows y probar SSH; ver [guía](docs/03-tailscale.md) |
+| Tailscale y acceso desde otra red | 🟡 Ambos dispositivos en tailnet; acceso pendiente | Raspberry conectada y `tailscaled` activo (1.104.4). `tailscale status` en Windows enumera Windows y `pi-agents`. Faltan pruebas de ruta, SSH y red externa; ver [guía](docs/03-tailscale.md) |
 | Docker, API y orquestador de agentes | ⏳ Pendiente | Ver [arquitectura](docs/04-arquitectura.md) |
 | Integración de Obsidian | ⏳ Pendiente | Diseño; sin escrituras automáticas todavía |
 

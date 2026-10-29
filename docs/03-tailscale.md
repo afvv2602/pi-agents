@@ -1,6 +1,6 @@
 # 03 — Acceso remoto con Tailscale
 
-**Estado: Raspberry conectada a la tailnet; cliente Windows y pruebas pendientes.** Guía revisada el 2026-10-29 contra documentación oficial. El usuario ejecuta los comandos en la Raspberry y comparte resultados; Codex documenta los resultados y prepara los siguientes pasos.
+**Estado: Raspberry y Windows en la tailnet; pruebas de ruta, SSH y red externa pendientes.** Guía revisada el 2026-10-29 contra documentación oficial. El usuario ejecuta los comandos y comparte resultados; Codex documenta los resultados y prepara los siguientes pasos.
 
 ## Objetivo y decisiones
 
@@ -55,9 +55,11 @@ Abrir en el navegador la URL de autenticación que muestre `tailscale up`, usand
 
 **Resultado observado en capturas aportadas por el usuario:** `sudo tailscale up` devolvió `Success`; `tailscale status` enumera `pi-agents` y `tailscale ip -4` devolvió una dirección de la tailnet. La consola **Machines** muestra `pi-agents` como **Connected**, con versión 1.104.4. No se publica la dirección, identidad de cuenta ni URL de autenticación visibles en las capturas. En ese momento solo aparece un dispositivo; aún no se ha probado conexión entre equipos.
 
-## 3. Windows y prueba de conectividad (pendiente)
+## 3. Windows y prueba de conectividad (cliente incorporado; pruebas pendientes)
 
 Instalar el cliente según la [guía oficial para Windows](https://tailscale.com/docs/install/windows) e iniciar sesión en la misma tailnet. Comprobar ambos equipos en la aplicación y en **Machines**. Desde PowerShell:
+
+**Resultado observado en captura aportada por el usuario (2026-10-29):** `tailscale status` ejecutado en Windows enumera el cliente Windows y `pi-agents` en la misma tailnet. La captura no prueba aún el tráfico entre ellos, la apertura de TCP/22 ni el login SSH. Se omiten IP e identidad de cuenta del repositorio.
 
 ```powershell
 tailscale status
