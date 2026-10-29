@@ -1,6 +1,6 @@
 # 03 — Acceso remoto con Tailscale
 
-**Estado: Tailscale instalado en la Raspberry; adhesión a la tailnet y pruebas pendientes.** Guía revisada el 2026-10-29 contra documentación oficial. El usuario ejecuta los comandos en la Raspberry y comparte resultados; Codex documenta los resultados y prepara los siguientes pasos.
+**Estado: Raspberry conectada a la tailnet; cliente Windows y pruebas pendientes.** Guía revisada el 2026-10-29 contra documentación oficial. El usuario ejecuta los comandos en la Raspberry y comparte resultados; Codex documenta los resultados y prepara los siguientes pasos.
 
 ## Objetivo y decisiones
 
@@ -43,7 +43,7 @@ Si el servicio no está activo, revisar `sudo systemctl status tailscaled` y `su
 
 **Resultado observado en captura aportada por el usuario:** DietPi-Software indica `Install completed`; `systemctl is-active tailscaled` devuelve `active`; `tailscale version` informa 1.104.4. Esto verifica instalación y servicio activo en ese momento, pero no confirma aún que la Raspberry esté unida a la tailnet ni que el servicio sobreviva a un reinicio.
 
-## 2. Unir la Raspberry a la tailnet (pendiente)
+## 2. Unir la Raspberry a la tailnet (completado el 2026-10-29)
 
 ```bash
 sudo tailscale up
@@ -52,6 +52,8 @@ tailscale ip -4
 ```
 
 Abrir en el navegador la URL de autenticación que muestre `tailscale up`, usando la cuenta/tailnet prevista. Confirmar el dispositivo en **Machines** de la consola. Si se exige aprobación, completarla allí y repetir `tailscale status`. Guardar la IP Tailscale solo en configuración privada. No publicar URL de autenticación, claves ni capturas sin redactar.
+
+**Resultado observado en capturas aportadas por el usuario:** `sudo tailscale up` devolvió `Success`; `tailscale status` enumera `pi-agents` y `tailscale ip -4` devolvió una dirección de la tailnet. La consola **Machines** muestra `pi-agents` como **Connected**, con versión 1.104.4. No se publica la dirección, identidad de cuenta ni URL de autenticación visibles en las capturas. En ese momento solo aparece un dispositivo; aún no se ha probado conexión entre equipos.
 
 ## 3. Windows y prueba de conectividad (pendiente)
 
