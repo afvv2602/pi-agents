@@ -26,7 +26,7 @@ El repositorio está pensado como evidencia verificable de **administración Lin
 | Autenticación SSH exclusivamente por clave | 🟡 Pendiente de verificar y endurecer | Comprobar autenticación forzada; deshabilitar contraseña solo después |
 | Actualizaciones pendientes/estado APT | 🟡 Pendiente de comprobar | Verificar versiones y estado de paquetes |
 | Comprobaciones previas a Tailscale | ✅ Parcialmente comprobadas | Captura del 2026-10-29: Debian 13.7, hora sincronizada, ~55 GB libres y `dpkg --audit` sin incidencias; nivel de actualizaciones aún pendiente |
-| Tailscale y acceso desde otra red | 🟡 Puerto SSH alcanzable; login pendiente | `tailscale ping` respondió en ambos sentidos por LAN y `Test-NetConnection` confirmó TCP/22 mediante la interfaz Tailscale. Faltan login SSH y prueba desde otra red; ver [guía](docs/03-tailscale.md) |
+| Tailscale y acceso desde otra red | 🟡 SSH por Tailscale comprobado en LAN | Login como `piadmin` con clave pública y sin contraseña de cuenta, sobre la IP Tailscale. Faltan prueba desde otra red y reconexión tras reinicio; ver [guía](docs/03-tailscale.md) |
 | Docker, API y orquestador de agentes | ⏳ Pendiente | Ver [arquitectura](docs/04-arquitectura.md) |
 | Integración de Obsidian | ⏳ Pendiente | Diseño; sin escrituras automáticas todavía |
 
@@ -107,7 +107,7 @@ Procedimiento: [instalación de DietPi](docs/01-instalacion-dietpi.md) y [red/SS
 
 ## Próximo hito: acceso remoto seguro
 
-Tailscale está instalado en la Raspberry y en Windows. Ambos dispositivos aparecen en la misma *tailnet*, `tailscale ping` respondió en los dos sentidos estando en la LAN y TCP/22 es alcanzable mediante Tailscale. El siguiente paso es probar el login SSH por clave; después, repetir la prueba desde otra red (por ejemplo, un punto de acceso móvil), **sin abrir puertos del router**. Ver [guía y criterios de aceptación](docs/03-tailscale.md).
+Tailscale está instalado en la Raspberry y en Windows. Ambos dispositivos aparecen en la misma *tailnet* y SSH por clave funciona sobre la IP Tailscale estando en la LAN. El siguiente paso es repetir la prueba desde otra red (por ejemplo, un punto de acceso móvil) y comprobar reconexión tras reinicio, **sin abrir puertos del router**. Ver [guía y criterios de aceptación](docs/03-tailscale.md).
 
 ## Principios del proyecto
 

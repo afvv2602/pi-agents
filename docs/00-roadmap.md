@@ -8,7 +8,7 @@ Actualizado: 2026-10-29. **✅** confirmado por la documentación de la instalac
 | 1. Usuario y DHCP | ✅ | `piadmin` puede usar `sudo`; reserva asociada a `wlan0` | `sudo whoami`; prueba LAN tras nueva concesión |
 | 2. Estado de paquetes | 🟡 | APT sin tareas interrumpidas y actualizaciones revisadas | Fecha, versiones y resultado de revisión |
 | 3. SSH por clave | 🟡 | Nueva sesión con clave; contraseña de cuenta rechazada tras endurecimiento autorizado | Pruebas positivas y negativas, vía de recuperación |
-| 4. Tailscale | 🟡 | SSH por IP Tailscale desde otra red; servicio recuperado tras reinicio; SSH local conservado; sin puerto WAN publicado | Instalación y adhesión completadas; `tailscale ping` respondió en ambos sentidos por LAN y TCP/22 respondió mediante Tailscale. Faltan login SSH y pruebas de [aceptación](03-tailscale.md#criterios-de-aceptación) |
+| 4. Tailscale | 🟡 | SSH por IP Tailscale desde otra red; servicio recuperado tras reinicio; SSH local conservado; sin puerto WAN publicado | Instalación, adhesión y login SSH por clave sobre Tailscale en LAN comprobados. Faltan red externa, reinicio y demás pruebas de [aceptación](03-tailscale.md#criterios-de-aceptación) |
 | 5. Copias y observabilidad | ⏳ | Backup fuera de microSD restaurado en prueba; espacio, logs y salud visibles | Registro de restauración y controles |
 | 6. Docker Compose | ⏳ | Imagen ARM64 de prueba arranca, reinicia, registra logs y conserva datos | Archivo Compose, comandos y salida redactada |
 | 7. API FastAPI | ⏳ | Healthcheck y endpoint autenticado; acceso limitado a la red autorizada | Pruebas de éxito y rechazo |
@@ -24,4 +24,4 @@ Registrar objetivo, contexto, decisión y alternativas, instrucciones reproducib
 
 ## Próximo paso
 
-Desde PowerShell, probar SSH por la dirección Tailscale usando la clave, verificar la identidad del host y confirmar `hostname` y `whoami`. El usuario ejecuta los comandos y comparte resultados redactados; ver la [guía de Tailscale](03-tailscale.md).
+Conectar Windows a una red distinta de la LAN y repetir `tailscale ping`, TCP/22 y SSH por clave hacia la dirección Tailscale. El usuario ejecuta los comandos y comparte resultados redactados; ver la [guía de Tailscale](03-tailscale.md).

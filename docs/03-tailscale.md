@@ -1,6 +1,6 @@
 # 03 — Acceso remoto con Tailscale
 
-**Estado: Tailscale conectado en Raspberry y Windows; `tailscale ping` y TCP/22 comprobados desde Windows en LAN.** Login SSH y acceso desde otra red siguen pendientes. Guía revisada el 2026-10-29 contra documentación oficial. El usuario ejecuta los comandos y comparte resultados; Codex documenta los resultados y prepara los siguientes pasos.
+**Estado: SSH por clave sobre Tailscale comprobado desde Windows en LAN.** Acceso desde otra red y recuperación tras reinicio siguen pendientes. Guía revisada el 2026-10-29 contra documentación oficial. El usuario ejecuta los comandos y comparte resultados; Codex documenta los resultados y prepara los siguientes pasos.
 
 ## Objetivo y decisiones
 
@@ -55,13 +55,15 @@ Abrir en el navegador la URL de autenticación que muestre `tailscale up`, usand
 
 **Resultado observado en capturas aportadas por el usuario:** `sudo tailscale up` devolvió `Success`; `tailscale status` enumera `pi-agents` y `tailscale ip -4` devolvió una dirección de la tailnet. La consola **Machines** muestra `pi-agents` como **Connected**, con versión 1.104.4. No se publica la dirección, identidad de cuenta ni URL de autenticación visibles en las capturas. En ese momento solo aparece un dispositivo; aún no se ha probado conexión entre equipos.
 
-## 3. Windows y prueba de conectividad (ping y TCP/22 comprobados; SSH pendiente)
+## 3. Windows y prueba de conectividad (ping, TCP/22 y SSH comprobados en LAN)
 
 Instalar el cliente según la [guía oficial para Windows](https://tailscale.com/docs/install/windows) e iniciar sesión en la misma tailnet. Comprobar ambos equipos en la aplicación y en **Machines**. Desde PowerShell:
 
 **Resultados observados en capturas aportadas por el usuario (2026-10-29):** `tailscale status` ejecutado en Windows enumera ambos dispositivos en la misma tailnet. Después, `tailscale ping` respondió de Windows a `pi-agents` y de la Raspberry a Windows, con ruta directa por direcciones LAN. Esto prueba conectividad Tailscale entre ambos en la red actual; no prueba TCP/22, login SSH ni alcance desde otra red. Se omiten direcciones e identidad de cuenta del repositorio.
 
-**Prueba posterior:** `Test-NetConnection <TAILSCALE_IP> -Port 22` desde PowerShell devolvió `TcpTestSucceeded: True` y mostró `InterfaceAlias: Tailscale`. El puerto SSH de la Raspberry es alcanzable a través de la interfaz Tailscale en la red actual. Todavía no se ha probado autenticación SSH ni acceso desde fuera de la LAN.
+**Prueba posterior:** `Test-NetConnection <TAILSCALE_IP> -Port 22` desde PowerShell devolvió `TcpTestSucceeded: True` y mostró `InterfaceAlias: Tailscale`. El puerto SSH de la Raspberry era alcanzable a través de la interfaz Tailscale en la red actual. En ese momento aún no se había probado autenticación SSH ni acceso desde fuera de la LAN.
+
+**Login SSH posterior:** una captura muestra una sesión `piadmin@pi-agents` abierta desde Windows hacia la IP Tailscale. El comando limitó la autenticación a clave pública, deshabilitó contraseña de cuenta y `keyboard-interactive`, y solicitó la frase de paso de la clave privada local. La huella del host coincidía con una entrada ya conocida por la dirección LAN y el usuario confirmó la nueva entrada para la IP Tailscale. Esto comprueba autenticación por clave en esta sesión; **no** demuestra que el servidor ya rechace contraseñas en otras conexiones. El banner confirmó DietPi v10.8.2 en Raspberry Pi 4 ARM64. También mostró una advertencia de temperatura de CPU (62 °C), pendiente de seguimiento; no se ha diagnosticado su causa. La captura contenía direcciones y huella SSH que no se publican aquí.
 
 ```powershell
 tailscale status
@@ -100,7 +102,7 @@ Revisar en **DNS** de la consola si [MagicDNS](https://tailscale.com/docs/featur
 
 - [x] `tailscaled` activo y ambos equipos visibles en la misma tailnet.
 - [x] `tailscale ping` y TCP/22 correctos desde Windows en LAN.
-- [ ] SSH convencional por Tailscale con `piadmin` y clave pública, sin contraseña de cuenta.
+- [x] SSH convencional por Tailscale con `piadmin` y clave pública, sin contraseña de cuenta en la prueba LAN.
 - [ ] La conexión funciona desde una red externa.
 - [ ] Tras reiniciar, Tailscale y el SSH local y remoto siguen disponibles.
 - [ ] Sin port forwarding de TCP/22, exit node, subnet router ni Tailscale SSH.

@@ -11,7 +11,9 @@ El formato registra eventos **comprobados** separadamente de los planes.
 - Capturas posteriores: `sudo tailscale up` finalizó correctamente; `tailscale status` e `ip -4` devolvieron datos del nodo y la consola **Machines** muestra `pi-agents` conectado. IP, cuenta y URL de autenticación omitidas deliberadamente.
 - Captura de PowerShell: `tailscale status` enumera el cliente Windows y `pi-agents` en la misma tailnet.
 - Capturas de ambos equipos: `tailscale ping` responde en los dos sentidos mediante ruta directa por la LAN. Se omiten las direcciones concretas; en ese momento aún no se habían probado TCP/22, SSH ni acceso desde otra red.
-- Captura de PowerShell: `Test-NetConnection <TAILSCALE_IP> -Port 22` devuelve `TcpTestSucceeded: True` mediante `InterfaceAlias: Tailscale`. El puerto responde en la red actual; aún no se ha probado el login SSH.
+- Captura de PowerShell: `Test-NetConnection <TAILSCALE_IP> -Port 22` devuelve `TcpTestSucceeded: True` mediante `InterfaceAlias: Tailscale`. El puerto responde en la red actual; en ese momento aún no se había probado el login SSH.
+- Captura de PowerShell: login `piadmin@pi-agents` correcto por la IP Tailscale con autenticación limitada a clave pública; se solicitó la frase de paso de la clave privada local. El cliente reconoció la huella del host por una entrada previa en LAN. DietPi v10.8.2 y Raspberry Pi 4 ARM64 confirmados en el banner. La prueba sigue siendo dentro de la LAN.
+- El banner advirtió temperatura de CPU de 62 °C; queda pendiente revisar tendencia y refrigeración, sin causa diagnosticada.
 - Estas pruebas no confirman aún el nivel de actualizaciones APT ni el uso exclusivo de clave SSH.
 
 ### Documentación
@@ -23,7 +25,7 @@ El formato registra eventos **comprobados** separadamente de los planes.
 
 ### Estado
 
-- Raspberry y Windows aparecen en la tailnet, responden a `tailscale ping` en LAN y TCP/22 es alcanzable desde Windows; faltan login SSH, red externa y el endurecimiento SSH.
+- Raspberry y Windows aparecen en la tailnet; ping, TCP/22 y login SSH por clave funcionan sobre Tailscale estando en LAN. Faltan red externa, reconexión tras reinicio y endurecimiento SSH del servidor.
 - Codex no ejecutó operaciones sobre la Raspberry; la instalación la realizó el usuario.
 
 ## [0.1.0] — 2026-10-29

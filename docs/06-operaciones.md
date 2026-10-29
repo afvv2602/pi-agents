@@ -22,6 +22,8 @@ ip -br addr
 ip route
 ```
 
+**Observación pendiente (2026-10-29):** el banner de DietPi mostró una advertencia de temperatura de CPU a 62 °C durante una sesión SSH. No se conoce aún la tendencia ni la causa. Antes de considerar el equipo listo para servicio continuo, medir temperatura bajo carga y en reposo y revisar ventilación/refrigeración; registrar resultados sin asumir que una sola lectura implica un fallo.
+
 ## Actualizaciones
 
 ```bash
