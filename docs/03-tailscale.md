@@ -1,6 +1,6 @@
 # 03 — Acceso remoto con Tailscale
 
-**Estado: Tailscale conectado en Raspberry y Windows; `tailscale ping` probado en ambos sentidos por LAN.** TCP/22, SSH y acceso desde otra red siguen pendientes. Guía revisada el 2026-10-29 contra documentación oficial. El usuario ejecuta los comandos y comparte resultados; Codex documenta los resultados y prepara los siguientes pasos.
+**Estado: Tailscale conectado en Raspberry y Windows; `tailscale ping` y TCP/22 comprobados desde Windows en LAN.** Login SSH y acceso desde otra red siguen pendientes. Guía revisada el 2026-10-29 contra documentación oficial. El usuario ejecuta los comandos y comparte resultados; Codex documenta los resultados y prepara los siguientes pasos.
 
 ## Objetivo y decisiones
 
@@ -55,11 +55,13 @@ Abrir en el navegador la URL de autenticación que muestre `tailscale up`, usand
 
 **Resultado observado en capturas aportadas por el usuario:** `sudo tailscale up` devolvió `Success`; `tailscale status` enumera `pi-agents` y `tailscale ip -4` devolvió una dirección de la tailnet. La consola **Machines** muestra `pi-agents` como **Connected**, con versión 1.104.4. No se publica la dirección, identidad de cuenta ni URL de autenticación visibles en las capturas. En ese momento solo aparece un dispositivo; aún no se ha probado conexión entre equipos.
 
-## 3. Windows y prueba de conectividad (ping comprobado; TCP/22 y SSH pendientes)
+## 3. Windows y prueba de conectividad (ping y TCP/22 comprobados; SSH pendiente)
 
 Instalar el cliente según la [guía oficial para Windows](https://tailscale.com/docs/install/windows) e iniciar sesión en la misma tailnet. Comprobar ambos equipos en la aplicación y en **Machines**. Desde PowerShell:
 
 **Resultados observados en capturas aportadas por el usuario (2026-10-29):** `tailscale status` ejecutado en Windows enumera ambos dispositivos en la misma tailnet. Después, `tailscale ping` respondió de Windows a `pi-agents` y de la Raspberry a Windows, con ruta directa por direcciones LAN. Esto prueba conectividad Tailscale entre ambos en la red actual; no prueba TCP/22, login SSH ni alcance desde otra red. Se omiten direcciones e identidad de cuenta del repositorio.
+
+**Prueba posterior:** `Test-NetConnection <TAILSCALE_IP> -Port 22` desde PowerShell devolvió `TcpTestSucceeded: True` y mostró `InterfaceAlias: Tailscale`. El puerto SSH de la Raspberry es alcanzable a través de la interfaz Tailscale en la red actual. Todavía no se ha probado autenticación SSH ni acceso desde fuera de la LAN.
 
 ```powershell
 tailscale status
@@ -97,7 +99,7 @@ Revisar en **DNS** de la consola si [MagicDNS](https://tailscale.com/docs/featur
 ## Criterios de aceptación
 
 - [x] `tailscaled` activo y ambos equipos visibles en la misma tailnet.
-- [ ] `tailscale ping` y TCP/22 correctos desde Windows.
+- [x] `tailscale ping` y TCP/22 correctos desde Windows en LAN.
 - [ ] SSH convencional por Tailscale con `piadmin` y clave pública, sin contraseña de cuenta.
 - [ ] La conexión funciona desde una red externa.
 - [ ] Tras reiniciar, Tailscale y el SSH local y remoto siguen disponibles.

@@ -11,7 +11,7 @@ flowchart LR
   DHCP[Router doméstico / reserva DHCP] -.-> Host
 ```
 
-La infraestructura actual incluye Linux, red local, acceso SSH local, usuario administrador y ambos dispositivos unidos a Tailscale. `tailscale ping` ha respondido en ambos sentidos sobre una ruta directa en la LAN. SSH por Tailscale y acceso desde otra red siguen sin verificar.
+La infraestructura actual incluye Linux, red local, acceso SSH local, usuario administrador y ambos dispositivos unidos a Tailscale. `tailscale ping` ha respondido en ambos sentidos sobre una ruta directa en la LAN; TCP/22 también responde desde Windows mediante la interfaz Tailscale. El login SSH por Tailscale y el acceso desde otra red siguen sin verificar.
 
 ## Arquitectura objetivo (diseño)
 
