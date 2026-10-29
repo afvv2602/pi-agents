@@ -1,0 +1,41 @@
+# Secrets and local configuration
+.env
+.env.*
+!.env.example
+*.pem
+*.p12
+*.pfx
+*.key
+*.pub
+**/.ssh/
+**/authorized_keys
+**/known_hosts
+**/config.private
+*.secret
+secrets/
+private/
+
+# OS / Python / temporary
+.DS_Store
+Thumbs.db
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+.pytest_cache/
+.mypy_cache/
+.idea/
+.vscode/
+*.log
+*.sqlite
+*.sqlite3
+*.db
+*.db-wal
+*.db-shm
+backup/
+backups/
+cache/
+.tmp/
+
+# Do not commit screenshots until manually sanitized
+screenshots/raw/
