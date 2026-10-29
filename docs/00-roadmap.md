@@ -1,6 +1,6 @@
 # Roadmap y criterios de aceptación
 
-Actualizado: 2026-10-29. **✅** confirmado por la documentación de la instalación previa; **🟡** pendiente de verificar; **⏳** no implementado. No se ha inspeccionado la Raspberry durante esta revisión.
+Actualizado: 2026-10-29. **✅** confirmado por la documentación de la instalación previa; **🟡** pendiente de verificar; **⏳** no implementado. Las pruebas recientes proceden de capturas del usuario; Codex no ha ejecutado comandos en la Raspberry.
 
 | Hito | Estado | Criterio de aceptación verificable | Evidencia a registrar |
 |---|---|---|---|
@@ -8,7 +8,7 @@ Actualizado: 2026-10-29. **✅** confirmado por la documentación de la instalac
 | 1. Usuario y DHCP | ✅ | `piadmin` puede usar `sudo`; reserva asociada a `wlan0` | `sudo whoami`; prueba LAN tras nueva concesión |
 | 2. Estado de paquetes | 🟡 | APT sin tareas interrumpidas y actualizaciones revisadas | Fecha, versiones y resultado de revisión |
 | 3. SSH por clave | 🟡 | Nueva sesión con clave; contraseña de cuenta rechazada tras endurecimiento autorizado | Pruebas positivas y negativas, vía de recuperación |
-| 4. Tailscale | 🟡 | SSH por IP Tailscale desde otra red; servicio recuperado tras reinicio; SSH local conservado; sin puerto WAN publicado | Instalación DietPi y adhesión completadas; `tailscale status` en Windows enumera ambos dispositivos. Faltan ruta, SSH y pruebas de [aceptación](03-tailscale.md#criterios-de-aceptación) |
+| 4. Tailscale | 🟡 | SSH por IP Tailscale desde otra red; servicio recuperado tras reinicio; SSH local conservado; sin puerto WAN publicado | Instalación y adhesión completadas; `tailscale ping` respondió en ambos sentidos por una ruta directa en LAN. Faltan TCP/22, SSH y pruebas de [aceptación](03-tailscale.md#criterios-de-aceptación) |
 | 5. Copias y observabilidad | ⏳ | Backup fuera de microSD restaurado en prueba; espacio, logs y salud visibles | Registro de restauración y controles |
 | 6. Docker Compose | ⏳ | Imagen ARM64 de prueba arranca, reinicia, registra logs y conserva datos | Archivo Compose, comandos y salida redactada |
 | 7. API FastAPI | ⏳ | Healthcheck y endpoint autenticado; acceso limitado a la red autorizada | Pruebas de éxito y rechazo |
@@ -24,4 +24,4 @@ Registrar objetivo, contexto, decisión y alternativas, instrucciones reproducib
 
 ## Próximo paso
 
-Tras autorización para la operación remota, comprobar desde PowerShell `ssh pi-agents-local` y ejecutar las [comprobaciones previas de Tailscale](03-tailscale.md#0-antes-de-instalar-pendiente). Después instalar mediante `sudo dietpi-software`.
+Desde PowerShell, comprobar `Test-NetConnection <TAILSCALE_IP> -Port 22`; si responde, probar SSH por la dirección Tailscale usando la clave. El usuario ejecuta los comandos y comparte resultados redactados; ver la [guía de Tailscale](03-tailscale.md).

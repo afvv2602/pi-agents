@@ -6,11 +6,12 @@
 
 ```mermaid
 flowchart LR
-  Admin[Windows / PowerShell] -->|SSH a LAN| Host[pi-agents: Raspberry Pi 4 + DietPi]
+  Admin[Windows / PowerShell] -->|SSH local| Host[pi-agents: Raspberry Pi 4 + DietPi]
+  Admin -->|Tailscale ping directo en LAN| Host
   DHCP[Router doméstico / reserva DHCP] -.-> Host
 ```
 
-La infraestructura actual se limita a Linux, red local, acceso SSH y usuario administrador.
+La infraestructura actual incluye Linux, red local, acceso SSH local, usuario administrador y ambos dispositivos unidos a Tailscale. `tailscale ping` ha respondido en ambos sentidos sobre una ruta directa en la LAN. SSH por Tailscale y acceso desde otra red siguen sin verificar.
 
 ## Arquitectura objetivo (diseño)
 

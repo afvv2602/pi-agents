@@ -26,11 +26,11 @@ El repositorio está pensado como evidencia verificable de **administración Lin
 | Autenticación SSH exclusivamente por clave | 🟡 Pendiente de verificar y endurecer | Comprobar autenticación forzada; deshabilitar contraseña solo después |
 | Actualizaciones pendientes/estado APT | 🟡 Pendiente de comprobar | Verificar versiones y estado de paquetes |
 | Comprobaciones previas a Tailscale | ✅ Parcialmente comprobadas | Captura del 2026-10-29: Debian 13.7, hora sincronizada, ~55 GB libres y `dpkg --audit` sin incidencias; nivel de actualizaciones aún pendiente |
-| Tailscale y acceso desde otra red | 🟡 Ambos dispositivos en tailnet; acceso pendiente | Raspberry conectada y `tailscaled` activo (1.104.4). `tailscale status` en Windows enumera Windows y `pi-agents`. Faltan pruebas de ruta, SSH y red externa; ver [guía](docs/03-tailscale.md) |
+| Tailscale y acceso desde otra red | 🟡 Conectividad entre dispositivos comprobada; SSH pendiente | `tailscale ping` respondió en ambos sentidos sobre una ruta directa por la LAN. Faltan TCP/22, SSH y prueba desde otra red; ver [guía](docs/03-tailscale.md) |
 | Docker, API y orquestador de agentes | ⏳ Pendiente | Ver [arquitectura](docs/04-arquitectura.md) |
 | Integración de Obsidian | ⏳ Pendiente | Diseño; sin escrituras automáticas todavía |
 
-**Convención:** ✅ confirmado en la instalación previa según el registro del proyecto · 🟡 requiere una comprobación adicional · ⏳ no implementado. Esta revisión documental no ha inspeccionado la Raspberry; las pruebas remotas se registrarán cuando se ejecuten.
+**Convención:** ✅ confirmado en la instalación previa según el registro del proyecto · 🟡 requiere una comprobación adicional · ⏳ no implementado. Las pruebas recientes proceden de capturas aportadas por el usuario; Codex no ha ejecutado comandos en la Raspberry.
 
 ## Hardware y software
 
@@ -53,7 +53,8 @@ El repositorio está pensado como evidencia verificable de **administración Lin
 
 ```mermaid
 flowchart LR
-    Win[Windows / PowerShell] -->|SSH en LAN| Pi[Raspberry Pi 4 / DietPi]
+    Win[Windows / PowerShell] -->|SSH local| Pi[Raspberry Pi 4 / DietPi]
+    Win -->|Tailscale ping en LAN| Pi
     Router[Router doméstico / reserva DHCP] -.-> Pi
 ```
 
@@ -106,9 +107,7 @@ Procedimiento: [instalación de DietPi](docs/01-instalacion-dietpi.md) y [red/SS
 
 ## Próximo hito: acceso remoto seguro
 
-Instalar Tailscale **en la Raspberry y en el cliente Windows**, unir ambos a la misma *tailnet* y probar SSH desde una red distinta (por ejemplo, un punto de acceso móvil), **sin abrir puertos del router**. Los pasos y criterios de aceptación están en [docs/03-tailscale.md](docs/03-tailscale.md).
-
-Primer paso operativo: comprobar `ssh pi-agents-local` y el estado básico del host antes de instalar mediante `dietpi-software`. La intervención remota requiere autorización específica.
+Tailscale está instalado en la Raspberry y en Windows. Ambos dispositivos aparecen en la misma *tailnet* y `tailscale ping` respondió en los dos sentidos estando en la LAN. El siguiente paso es comprobar TCP/22 y SSH por la dirección Tailscale; después, repetir la prueba desde otra red (por ejemplo, un punto de acceso móvil), **sin abrir puertos del router**. Ver [guía y criterios de aceptación](docs/03-tailscale.md).
 
 ## Principios del proyecto
 
@@ -122,7 +121,7 @@ Primer paso operativo: comprobar `ssh pi-agents-local` y el estado básico del h
 - [Roadmap y criterios de aceptación](docs/00-roadmap.md)
 - [Instalación y configuración inicial](docs/01-instalacion-dietpi.md)
 - [Red local, DHCP y SSH](docs/02-red-y-ssh.md)
-- [Tailscale (pendiente de ejecutar)](docs/03-tailscale.md)
+- [Tailscale (en pruebas)](docs/03-tailscale.md)
 - [Diseño de arquitectura](docs/04-arquitectura.md)
 - [Incidentes y soluciones](docs/05-resolucion-problemas.md)
 - [Operaciones del servidor](docs/06-operaciones.md)
