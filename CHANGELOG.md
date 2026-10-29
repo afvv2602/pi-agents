@@ -26,7 +26,8 @@ El formato registra eventos **comprobados** separadamente de los planes.
 ### Estado
 
 - Raspberry y Windows aparecen en la tailnet; ping, TCP/22 y login SSH por clave funcionan sobre Tailscale estando en LAN. Faltan red externa, reconexión tras reinicio y endurecimiento SSH del servidor.
-- El usuario comunica que un SSD conectado por USB no se reconoce o no puede utilizarse. Diagnóstico y causa pendientes; se añade INC-006 con comprobaciones de solo lectura.
+- El usuario comunicó que un SSD conectado por USB no se reconocía o no podía utilizarse; se abrió INC-006 con comprobaciones de solo lectura.
+- Captura de diagnóstico de INC-006: el SSD USB de 111,8 GiB y su partición NTFS aparecen en `lsblk`; el puente SATA-USB aparece en `lsusb`. La partición no está montada. El kernel registra desconexión/reconexión y un fallo de sincronización de caché tras una desconexión; no se conoce si los eventos fueron manuales. No se han modificado ni formateado datos.
 - Codex no ejecutó operaciones sobre la Raspberry; la instalación la realizó el usuario.
 
 ## [0.1.0] — 2026-10-29

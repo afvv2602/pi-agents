@@ -55,7 +55,7 @@ Los resultados Tailscale deben registrarse **solo después de instalar y probar*
 
 ## Copias de seguridad y recuperación (pendiente)
 
-Un SSD USB conectado todavía no se ha diagnosticado ni montado; ver [INC-006](05-resolucion-problemas.md). No usarlo como destino de copias ni migrar datos hasta confirmar detección, estado y contenido.
+El SSD USB ya se detecta como `/dev/sda`, con una partición NTFS sin montar; el registro muestra desconexiones cuyo origen no se conoce. Ver [INC-006](05-resolucion-problemas.md). No usarlo como destino de copias ni migrar datos hasta comprobar contenido y estabilidad.
 
 1. Definir destino de backup **fuera** de la microSD.
 2. Documentar proceso de restauración y probarlo.
