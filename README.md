@@ -1,6 +1,6 @@
 # Pi Agents — Raspberry Pi AI Orchestration Server
 
-> **Estado:** infraestructura base operativa · acceso remoto Tailscale pendiente · agentes IA en diseño.\
+> **Estado:** infraestructura base operativa · SSH por Tailscale verificado en LAN · acceso desde otra red y reconexión tras reinicio pendientes · agentes IA en diseño.\
 > **Idioma:** documentación técnica en español.\
 > **English overview:** Lightweight, secure, headless Raspberry Pi 4 platform intended to orchestrate Python-based AI agents, integrate with Obsidian and connect remote inference services. This repository documents both completed work and the implementation roadmap; unfinished components are explicitly marked as planned.
 
@@ -54,7 +54,7 @@ El repositorio está pensado como evidencia verificable de **administración Lin
 ```mermaid
 flowchart LR
     Win[Windows / PowerShell] -->|SSH local| Pi[Raspberry Pi 4 / DietPi]
-    Win -->|Tailscale ping en LAN| Pi
+    Win -->|SSH por Tailscale en LAN| Pi
     Router[Router doméstico / reserva DHCP] -.-> Pi
 ```
 
@@ -77,6 +77,7 @@ Las rutas de datos, autenticación, permisos y persistencia se detallarán a med
 ```text
 pi-agents/
 ├── README.md
+├── AGENTS.md
 ├── CHANGELOG.md
 ├── SECURITY.md
 ├── .gitignore

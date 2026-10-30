@@ -2,7 +2,7 @@
 
 El formato registra eventos **comprobados** separadamente de los planes.
 
-## [Sin publicar] — 2026-10-29
+## [Sin publicar]
 
 ### Comprobaciones observadas
 
@@ -18,6 +18,7 @@ El formato registra eventos **comprobados** separadamente de los planes.
 
 ### Documentación
 
+- 2026-10-30: añadido `AGENTS.md` con el alcance de mantenimiento documental, estados de evidencia, privacidad y flujo Git. Ajustado el resumen y diagrama del README para reflejar SSH por Tailscale verificado en LAN, manteniendo pendientes la prueba desde otra red y la reconexión tras reinicio.
 - Revisada la guía de Tailscale con fuentes oficiales de DietPi y Tailscale: comprobaciones previas, instalación, autenticación, pruebas por capas, red externa, reinicio y recuperación.
 - Convertido el roadmap en hitos con criterios de aceptación y evidencia a registrar.
 - Aclarado que los hitos de infraestructura de la versión 0.1.0 proceden del registro previo; esta revisión no ha comprobado la Raspberry.
