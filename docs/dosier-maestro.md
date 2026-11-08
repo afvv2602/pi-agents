@@ -1,6 +1,6 @@
 # HOMELAB AI · DOSIER MAESTRO DEL PROYECTO
 
-**Versión:** 0.2 — Revisión de los registros del proyecto
+**Versión:** 0.3 — Sistema operativo del servidor secundario elegido
 **Fecha:** 8 de noviembre de 2026
 **Estado:** Raspberry operativa en LAN · sistema distribuido en diseño
 **Proyecto existente:** `pi-agents`
@@ -167,7 +167,7 @@ No cargar este nodo con inferencia pesada, bases de datos voluminosas ni servici
 | CPU | Intel Core i5, generación 8.ª/9.ª por confirmar |
 | RAM | 8 GB |
 | GPU | AMD Radeon RX 590 |
-| Sistema operativo previsto | Linux dedicado, instalación pendiente de acreditar |
+| Sistema operativo previsto | Debian 13 estable (amd64), sin escritorio. Instalación desde USB y acceso SSH pendientes de verificar |
 | Almacenamiento | Pendiente de inventariar |
 | Disponibilidad objetivo | 24/7, pendiente de confirmar |
 | Función | Servidor general y worker |
@@ -452,7 +452,7 @@ Los trabajos interrumpidos solo se reintentarán cuando su política lo permita.
 | VPN | Tailscale |
 | Control de versiones | Git y GitHub |
 | Sistema Raspberry | Linux 64-bit existente |
-| Sistema secundario | Debian Server |
+| Sistema secundario | Debian 13 estable sin escritorio, administrado por SSH |
 | Sistema principal Linux | Ubuntu Desktop |
 | Monitorización inicial | Logs estructurados y health checks |
 
@@ -715,7 +715,7 @@ Los identificadores de la tabla pertenecen al briefing. Los [ADR técnicos del r
 | ADR-007 | PC secundario con Linux completo | Establecida |
 | ADR-008 | Principal como nodo GPU bajo demanda | Establecida |
 | ADR-009 | Secundario como servidor/NAS | Propuesta |
-| ADR-010 | Debian Server para secundario | Propuesta |
+| ADR-010 | Debian 13 estable sin escritorio para el secundario, administrado por SSH | Establecida |
 | ADR-011 | Ubuntu Desktop para principal | Propuesta |
 | ADR-012 | FastAPI + SQLite para V1 | Propuesta |
 | ADR-013 | Docker Compose antes de K3s | Propuesta |
@@ -772,7 +772,7 @@ Trabajos:
 
 Trabajos:
 
-- Instalar Debian en el secundario.
+- Identificar el disco de destino por modelo y capacidad. Preparar el USB con Debian 13 netinst amd64, instalar y verificar el primer arranque y una sesión SSH desde el principal.
 - Preparar dual boot del principal.
 - Configurar Linux, SSH y drivers.
 - Instalar Tailscale.
@@ -1139,3 +1139,4 @@ Todo ello sin exigir que el usuario conozca qué servidor ha ejecutado cada oper
 | EN PRUEBAS | La prueba desde otra red, la reconexión tras reinicio y el diagnóstico del SSD siguen abiertos. |
 | PENDIENTE | «Instalar Linux Dual Boot» recoge el requisito de conservar Windows. La elección de distribución y el arranque de Linux en el principal quedan por verificar. |
 | PENDIENTE | «Comparar Orca y alternativas» aporta el diseño de tres nodos. HITO-001 se cerrará cuando la Raspberry envíe una tarea al secundario y quede registrado su resultado. |
+| PENDIENTE de instalación | En «Explorar sistema operativo del PC secundario» se eligió Debian con administración por SSH y se acordó instalarlo desde USB tras una prueba incompleta de SteamOS. La configuración elegida reserva la RAM para servicios y workers. Se valoraron Ubuntu Server LTS y OpenMediaVault. Quedan por confirmar el disco de destino, el arranque y el primer acceso por SSH. |

@@ -18,6 +18,8 @@ El formato registra eventos **comprobados** separadamente de los planes.
 
 ### Documentación
 
+- 2026-11-08 · Actualizada ADR-010 del [dosier maestro](docs/dosier-maestro.md) con la elección de Debian 13 sin escritorio y administración por SSH para el secundario. La instalación desde USB sigue pendiente.
+
 - 2026-11-08 · Incorporado el [dosier maestro del homelab](docs/dosier-maestro.md), con inventario contrastado, arquitectura prevista de tres nodos y criterios de cierre del primer trabajo distribuido.
 
 - 2026-10-30: añadido `AGENTS.md` con el alcance de mantenimiento documental, estados de evidencia, privacidad y flujo Git. Ajustado el resumen y diagrama del README para reflejar SSH por Tailscale verificado en LAN, manteniendo pendientes la prueba desde otra red y la reconexión tras reinicio.
