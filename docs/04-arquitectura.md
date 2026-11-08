@@ -18,13 +18,16 @@ La infraestructura actual incluye Linux, red local, acceso SSH local, usuario ad
 ```mermaid
 flowchart TB
   User[Clientes: PC / móvil / Mac] -->|Tailnet Tailscale| Api[FastAPI / autenticación]
-  Api --> Orch[LangGraph: workflows con estado]
+  Api --> Orch[Orquestador propio en Python]
   Orch --> Obs[Adaptador Obsidian]
   Orch --> Tools[Herramientas con permisos acotados]
   Orch --> DB[(SQLite / logs / auditoría)]
-  Orch --> Model[API de LLM o modelo en otro equipo]
+  Orch --> Server[PC secundario / servicios y worker CPU]
+  Orch --> Model[PC principal / inferencia RTX 4060 Ti]
   Obs --> Vault[(Copia controlada del vault)]
 ```
+
+El [dosier maestro](dosier-maestro.md) recoge la política de asignación y los modos de operación con nodos apagados. LangGraph queda como opción para futuros flujos de agentes.
 
 ## Restricciones técnicas
 
@@ -39,7 +42,7 @@ flowchart TB
 ```text
 services/
   gateway-api/       # FastAPI
-  orchestrator/      # LangGraph / workers
+  orchestrator/      # scheduler Python / workers
   obsidian-bridge/   # adaptación del vault
   scheduler/         # tareas programadas
 infra/

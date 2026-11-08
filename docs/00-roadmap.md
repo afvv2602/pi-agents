@@ -1,6 +1,6 @@
 # Roadmap y criterios de aceptación
 
-Actualizado: 2026-10-29. **✅** confirmado por la documentación de la instalación previa; **🟡** pendiente de verificar; **⏳** no implementado. Las pruebas recientes proceden de capturas del usuario; Codex no ha ejecutado comandos en la Raspberry.
+El [dosier maestro](dosier-maestro.md) recoge las fases del homelab completo. Esta tabla sigue los hitos operativos de la Raspberry. Actualizado el 8 de noviembre de 2026. **✅** confirmado por la documentación de la instalación previa; **🟡** pendiente de verificar; **⏳** no implementado. Las pruebas recientes proceden de capturas del usuario; Codex no ha ejecutado comandos en la Raspberry.
 
 | Hito | Estado | Criterio de aceptación verificable | Evidencia a registrar |
 |---|---|---|---|
@@ -12,9 +12,9 @@ Actualizado: 2026-10-29. **✅** confirmado por la documentación de la instalac
 | 5. Copias y observabilidad | ⏳ | Backup fuera de microSD restaurado en prueba; espacio, logs y salud visibles | Registro de restauración y controles |
 | 6. Docker Compose | ⏳ | Imagen ARM64 de prueba arranca, reinicia, registra logs y conserva datos | Archivo Compose, comandos y salida redactada |
 | 7. API FastAPI | ⏳ | Healthcheck y endpoint autenticado; acceso limitado a la red autorizada | Pruebas de éxito y rechazo |
-| 8. LangGraph | ⏳ | Workflow de prueba con herramientas acotadas y estado recuperable | Pruebas automatizadas y diagrama |
+| 8. Orquestador Python | ⏳ | Trabajo persistido en la Raspberry, ejecutado por un worker y recuperable ante desconexión | Pruebas automatizadas y diagrama |
 | 9. Obsidian | ⏳ | Lectura, dry-run, diff, aprobación y rollback sobre copia del vault | Pruebas sin datos privados |
-| 10. Inferencia externa | ⏳ | Llamada a servicio remoto con timeouts y fallo controlado | Pruebas de error y coste documentado |
+| 10. Inferencia local en el PC principal | ⏳ | Llamada a servicio remoto con timeouts y fallo controlado | Pruebas de error y rendimiento documentadas |
 
 El 2026-10-29 se comprobaron el espacio libre, el reloj sincronizado y `sudo dpkg --audit` sin incidencias mediante captura del usuario. El hito 2 permanece 🟡 hasta revisar actualizaciones y versiones. Los hitos 2 y 3 se pueden verificar en paralelo con el hito 4, pero no se marcarán completados por el solo hecho de que Tailscale funcione. Ningún hito futuro implica despliegue automático del siguiente.
 

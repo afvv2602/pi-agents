@@ -8,7 +8,7 @@
 
 **Pi Agents** es un proyecto *homelab* y de portfolio para convertir una **Raspberry Pi 4 (4 GB)** en un servidor Linux de bajo consumo, gestionado remotamente y preparado para coordinar servicios y agentes de IA.
 
-La Raspberry actuará como **orquestador**, no como motor principal de inferencia: los modelos podrán ejecutarse en un equipo más potente (por ejemplo, un Mac mini) o consumirse mediante APIs externas. El primer caso de uso será automatizar de forma segura un vault de Obsidian (búsqueda de notas, creación de vocabulario, enlaces y validación de plantillas).
+La Raspberry coordinará los trabajos. El PC secundario con Linux alojará servicios y almacenamiento, y el PC principal con RTX 4060 Ti ejecutará inferencia local bajo demanda. El [dosier maestro del homelab](docs/dosier-maestro.md) reúne inventario, decisiones y criterios de aceptación de los tres nodos.
 
 El repositorio está pensado como evidencia verificable de **administración Linux, redes, acceso seguro, automatización, infraestructura reproducible y arquitectura de servicios**, no como demostración de funcionalidades aún no implementadas.
 
@@ -63,9 +63,10 @@ flowchart LR
 ```mermaid
 flowchart TD
     Devices[Windows / Mac / iPhone] -->|Tailscale / red privada| API[FastAPI en Pi Agents]
-    API --> Graph[Orquestador Python / LangGraph]
+    API --> Graph[Orquestador propio en Python]
     Graph --> Vault[Adaptador de Obsidian con validaciones]
-    Graph --> LLM[Modelos vía API / equipo remoto]
+    Graph --> Worker[PC secundario / worker CPU]
+    Graph --> LLM[PC principal / inferencia GPU]
     Graph --> State[Estado / auditoría / colas]
     Vault --> Notes[Vault de Obsidian]
 ```

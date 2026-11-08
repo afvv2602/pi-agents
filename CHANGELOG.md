@@ -18,6 +18,8 @@ El formato registra eventos **comprobados** separadamente de los planes.
 
 ### Documentación
 
+- 2026-11-08 · Incorporado el [dosier maestro del homelab](docs/dosier-maestro.md), con inventario contrastado, arquitectura prevista de tres nodos y criterios de cierre del primer trabajo distribuido.
+
 - 2026-10-30: añadido `AGENTS.md` con el alcance de mantenimiento documental, estados de evidencia, privacidad y flujo Git. Ajustado el resumen y diagrama del README para reflejar SSH por Tailscale verificado en LAN, manteniendo pendientes la prueba desde otra red y la reconexión tras reinicio.
 - Revisada la guía de Tailscale con fuentes oficiales de DietPi y Tailscale: comprobaciones previas, instalación, autenticación, pruebas por capas, red externa, reinicio y recuperación.
 - Convertido el roadmap en hitos con criterios de aceptación y evidencia a registrar.
