@@ -1,5 +1,7 @@
 # Roadmap y criterios de aceptación
 
+> Las verificaciones de red y configuración de esta página corresponden a la instalación en microSD. El 9 de noviembre de 2026 se comunicó el primer arranque desde SSD por USB 2.0. La configuración y el acceso del nuevo sistema siguen pendientes de verificar. [Estado del controlador](dosier-maestro.md).
+
 El [dosier maestro](dosier-maestro.md) recoge las fases del homelab completo. Esta tabla sigue los hitos operativos de la Raspberry. Actualizado el 8 de noviembre de 2026. **✅** confirmado por la documentación de la instalación previa; **🟡** pendiente de verificar; **⏳** no implementado. Las pruebas recientes proceden de capturas del usuario; Codex no ha ejecutado comandos en la Raspberry.
 
 | Hito | Estado | Criterio de aceptación verificable | Evidencia a registrar |

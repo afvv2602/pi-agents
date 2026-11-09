@@ -1,8 +1,8 @@
 # HOMELAB AI · DOSIER MAESTRO DEL PROYECTO
 
-**Versión:** 0.3 — Sistema operativo del servidor secundario elegido
-**Fecha:** 8 de noviembre de 2026
-**Estado:** Raspberry operativa en LAN · sistema distribuido en diseño
+**Versión:** 0.4 — Primer arranque del controlador desde SSD
+**Fecha:** 9 de noviembre de 2026
+**Estado:** DietPi en SSD en configuración · sistema distribuido en diseño
 **Proyecto existente:** `pi-agents`
 **Repositorio:** https://github.com/afvv2602/pi-agents
 
@@ -123,17 +123,17 @@ Integrar progresivamente agentes para:
 
 ## NODO-01 · Raspberry Pi
 
-**Hostname verificado:** `pi-agents`. El nombre `pi-control` designa el rol propuesto.
+**Hostname verificado en la microSD:** `pi-agents`. El nombre `pi-control` designa el rol propuesto.
 
 | Componente | Especificación |
 |---|---|
 | Equipo | Raspberry Pi 4 Model B |
 | Memoria | 4 GB RAM |
 | Arquitectura | ARM64 |
-| Sistema operativo | DietPi v10.8.2, Debian 13 (Trixie), ARM64 |
+| Sistema operativo | DietPi en SSD. La versión v10.8.2 se verificó en la microSD anterior |
 | Disponibilidad objetivo | 24/7 |
-| Conectividad | Wi-Fi con reserva DHCP. SSH por Tailscale probado desde Windows en LAN |
-| Almacenamiento | microSD de unos 64 GB. SSD USB de 111,8 GiB detectado, con partición NTFS sin montar. Desconexiones pendientes de diagnóstico ([INC-006](05-resolucion-problemas.md)) |
+| Conectividad | En la microSD se verificó Wi-Fi con reserva DHCP y SSH por Tailscale desde Windows en LAN. Red del SSD pendiente de verificar |
+| Almacenamiento | Arranque desde SSD Kingston por USB 2.0 confirmado por el usuario. Errores de E/S en USB 3.0 pendientes de diagnóstico ([INC-006](05-resolucion-problemas.md)) |
 | Función | Controlador principal |
 
 ### Responsabilidades
@@ -623,11 +623,11 @@ Funciones futuras:
 
 Objetivo: comunicación privada entre servidores y dispositivos personales.
 
-La Raspberry ya dispone de una instalación funcional.
+La instalación anterior en microSD tenía Tailscale operativo en LAN. Queda por verificar en el SSD.
 
 Pendiente:
 
-- Incorporar el secundario y verificar el cliente del principal bajo Linux. Windows ya accede a la Raspberry por Tailscale desde la LAN. Quedan pendientes la prueba desde otra red y la reconexión tras reinicio.
+- Incorporar el secundario y verificar el cliente del principal bajo Linux. Repetir en el SSD la prueba desde Windows en la LAN. Quedan pendientes la prueba desde otra red y la reconexión tras reinicio.
 - Configurar nombres internos.
 - Revisar políticas de acceso.
 - Definir qué aplicaciones estarán disponibles remotamente.
@@ -759,7 +759,7 @@ Trabajos:
 - Confirmar VRAM de la 4060 Ti.
 - Identificar modelo exacto del i5.
 - Inventariar discos del secundario.
-- Aclarar las desconexiones del SSD USB de la Raspberry. El SO y la microSD ya están identificados.
+- Identificar el dispositivo raíz del nuevo sistema y comprobar estabilidad del SSD y del enlace USB 3.0.
 - Comprobar conexiones Ethernet.
 - Evaluar consumo energético.
 - Referencia del estado actual de la Raspberry: [roadmap operativo](00-roadmap.md).
@@ -1060,7 +1060,7 @@ Antes de comenzar las instalaciones, hay que resolver:
 2. ¿Cuál es el modelo exacto del Intel i5?
 3. ¿Qué discos tiene el PC secundario?
 4. ¿El PC secundario permanecerá encendido 24/7?
-5. ¿Es estable el SSD USB para el uso previsto? El sistema actual arranca desde microSD.
+5. ¿Es estable el SSD USB para el uso previsto? El usuario confirmó un arranque por USB 2.0. Queda por verificar su estabilidad.
 6. ¿Los tres dispositivos tienen acceso a Ethernet?
 7. ¿Cuánto consume en reposo el PC secundario?
 8. ¿Qué espacio se reservará para Linux en el equipo principal?
@@ -1140,3 +1140,7 @@ Todo ello sin exigir que el usuario conozca qué servidor ha ejecutado cada oper
 | PENDIENTE | «Instalar Linux Dual Boot» recoge el requisito de conservar Windows. La elección de distribución y el arranque de Linux en el principal quedan por verificar. |
 | PENDIENTE | «Comparar Orca y alternativas» aporta el diseño de tres nodos. HITO-001 se cerrará cuando la Raspberry envíe una tarea al secundario y quede registrado su resultado. |
 | PENDIENTE de instalación | En «Explorar sistema operativo del PC secundario» se eligió Debian con administración por SSH y se acordó instalarlo desde USB tras una prueba incompleta de SteamOS. La configuración elegida reserva la RAM para servicios y workers. Se valoraron Ubuntu Server LTS y OpenMediaVault. Quedan por confirmar el disco de destino, el arranque y el primer acceso por SSH. |
+
+## Registro de actualización · 9 de noviembre de 2026
+
+En «Instalación Raspberry Pi», el usuario confirmó que DietPi arrancó desde el SSD por USB 2.0. El chat describe errores de E/S y reinicios del enlace en USB 3.0. La última incidencia comunicada fue la dificultad para salir de DietPi-Config. Quedan pendientes el acceso a la terminal, la comprobación de la raíz y las pruebas de red y SSH de esta instalación. [Seguimiento del SSD](05-resolucion-problemas.md).

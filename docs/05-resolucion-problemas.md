@@ -91,6 +91,10 @@ La [documentación oficial de DietPi](https://dietpi.com/docs/dietpi_tools/syste
 
 Referencias: [DietPi Drive Manager](https://dietpi.com/docs/dietpi_tools/system_configuration/), [Raspberry Pi: USB y alimentación](https://www.raspberrypi.com/documentation/computers/raspberry-pi.html), [Raspberry Pi: `vcgencmd get_throttled`](https://www.raspberrypi.com/documentation/computers/os.html).
 
+### Seguimiento de INC-006 · 9 de noviembre de 2026
+
+La observación de NTFS sin montar corresponde al diagnóstico anterior. El usuario comunicó que había grabado la imagen en el SSD. En USB 3.0 el chat de instalación recoge reinicios del enlace y errores de E/S; en USB 2.0 el usuario confirmó que DietPi arrancó. La causa del fallo en USB 3.0 y la estabilidad en uso prolongado continúan en pruebas. La última incidencia comunicada fue la dificultad para salir de DietPi-Config. Queda pendiente verificar desde la terminal el dispositivo raíz y registrar el resultado.
+
 ## Plantilla para nuevos incidentes
 
 ```text

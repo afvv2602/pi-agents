@@ -1,6 +1,6 @@
 # Pi Agents — Raspberry Pi AI Orchestration Server
 
-> **Estado:** infraestructura base operativa · SSH por Tailscale verificado en LAN · acceso desde otra red y reconexión tras reinicio pendientes · agentes IA en diseño.\
+> **Estado:** DietPi ha arrancado desde SSD por USB 2.0. La configuración y las pruebas de acceso de esta instalación siguen pendientes.
 > **Idioma:** documentación técnica en español.\
 > **English overview:** Lightweight, secure, headless Raspberry Pi 4 platform intended to orchestrate Python-based AI agents, integrate with Obsidian and connect remote inference services. This repository documents both completed work and the implementation roadmap; unfinished components are explicitly marked as planned.
 
@@ -12,7 +12,7 @@ La Raspberry coordinará los trabajos. El PC secundario con Linux alojará servi
 
 El repositorio está pensado como evidencia verificable de **administración Linux, redes, acceso seguro, automatización, infraestructura reproducible y arquitectura de servicios**, no como demostración de funcionalidades aún no implementadas.
 
-## Estado real del proyecto
+## Pruebas de la instalación anterior en microSD
 
 | Hito | Estado | Evidencia |
 |---|---|---|
@@ -32,7 +32,7 @@ El repositorio está pensado como evidencia verificable de **administración Lin
 
 **Convención:** ✅ confirmado en la instalación previa según el registro del proyecto · 🟡 requiere una comprobación adicional · ⏳ no implementado. Las pruebas recientes proceden de capturas aportadas por el usuario; Codex no ha ejecutado comandos en la Raspberry.
 
-## Hardware y software
+## Hardware y software de la instalación anterior
 
 | Componente | Configuración observada |
 |---|---|
@@ -49,7 +49,7 @@ El repositorio está pensado como evidencia verificable de **administración Lin
 
 ## Arquitectura
 
-### Actual — verificada
+### Acceso verificado en la instalación anterior
 
 ```mermaid
 flowchart LR
@@ -109,7 +109,7 @@ Procedimiento: [instalación de DietPi](docs/01-instalacion-dietpi.md) y [red/SS
 
 ## Próximo hito: acceso remoto seguro
 
-Tailscale está instalado en la Raspberry y en Windows. Ambos dispositivos aparecen en la misma *tailnet* y SSH por clave funciona sobre la IP Tailscale estando en la LAN. El siguiente paso es repetir la prueba desde otra red (por ejemplo, un punto de acceso móvil) y comprobar reconexión tras reinicio, **sin abrir puertos del router**. Ver [guía y criterios de aceptación](docs/03-tailscale.md).
+En la instalación anterior, Tailscale quedó operativo en la Raspberry y en Windows. Ambos dispositivos aparecen en la misma *tailnet* y SSH por clave funciona sobre la IP Tailscale estando en la LAN. En el SSD queda por verificar primero el acceso local y por Tailscale en LAN. Después se podrá repetir la prueba desde otra red (por ejemplo, un punto de acceso móvil) y comprobar reconexión tras reinicio, **sin abrir puertos del router**. Ver [guía y criterios de aceptación](docs/03-tailscale.md).
 
 ## Principios del proyecto
 

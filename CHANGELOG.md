@@ -6,6 +6,8 @@ El formato registra eventos **comprobados** separadamente de los planes.
 
 ### Comprobaciones observadas
 
+- 2026-11-09 · El usuario confirmó el arranque de DietPi desde el SSD por USB 2.0. Continúa el diagnóstico de USB 3.0 en [INC-006](docs/05-resolucion-problemas.md). Las pruebas SSH y Tailscale previas corresponden a la microSD.
+
 - Captura aportada por el usuario antes de instalar Tailscale: sesión SSH como `piadmin`, hostname `pi-agents`, Debian 13 (Trixie) 13.7, ~55 GB libres, reloj sincronizado en `Europe/Madrid` y `sudo dpkg --audit` sin salida.
 - Captura aportada tras instalar con `dietpi-software`: instalador finalizado, `tailscaled` activo y cliente Tailscale 1.104.4. En ese momento aún no se había comprobado la adhesión a la tailnet.
 - Capturas posteriores: `sudo tailscale up` finalizó correctamente; `tailscale status` e `ip -4` devolvieron datos del nodo y la consola **Machines** muestra `pi-agents` conectado. IP, cuenta y URL de autenticación omitidas deliberadamente.

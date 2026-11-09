@@ -1,5 +1,7 @@
 # 01 — Instalación base de DietPi
 
+> Las verificaciones de red y configuración de esta página corresponden a la instalación en microSD. El 9 de noviembre de 2026 se comunicó el primer arranque desde SSD por USB 2.0. La configuración y el acceso del nuevo sistema siguen pendientes de verificar. [Estado del controlador](dosier-maestro.md).
+
 **Estado:** completada la instalación inicial. Algunas verificaciones de actualización están pendientes.
 
 ## Hardware observado

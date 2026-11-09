@@ -1,5 +1,7 @@
 # 03 — Acceso remoto con Tailscale
 
+> Las verificaciones de red y configuración de esta página corresponden a la instalación en microSD. El 9 de noviembre de 2026 se comunicó el primer arranque desde SSD por USB 2.0. La configuración y el acceso del nuevo sistema siguen pendientes de verificar. [Estado del controlador](dosier-maestro.md).
+
 **Estado: SSH por clave sobre Tailscale comprobado desde Windows en LAN.** Acceso desde otra red y recuperación tras reinicio siguen pendientes. Guía revisada el 2026-10-29 contra documentación oficial. El usuario ejecuta los comandos y comparte resultados; Codex documenta los resultados y prepara los siguientes pasos.
 
 ## Objetivo y decisiones
