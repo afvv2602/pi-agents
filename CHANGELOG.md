@@ -4,7 +4,15 @@ El formato registra eventos **comprobados** separadamente de los planes.
 
 ## [Sin publicar]
 
-### Comprobaciones observadas
+### 2026-11-10 · Migración a Raspberry Pi OS Lite 64-bit
+
+- **IMPLEMENTADO y VERIFICADO.** El chat principal confirmó Raspberry Pi OS Lite sobre Debian 13 Trixie en la Raspberry Pi 4 ARM64 de 4 GB, con kernel `6.18.50+rpt-rpi-v8`. El sistema reinició tras actualizar. El SSD Kingston SV300S37A120G de unos 120 GB aloja la raíz EXT4 en `/dev/sda2` y la partición de arranque en `/dev/sda1`, montada en `/boot/firmware`.
+- En el arranque observado quedaban unos 101 GB libres. NTP estaba sincronizado en `Europe/Madrid` y `vcgencmd get_throttled` devolvió `0x0`. El registro filtrado no mostró errores de E/S ni EXT4. Se comunicaron advertencias no críticas de MMC, audio, Bluetooth y Wi-Fi.
+- El host `pi-agents` utiliza Wi-Fi por `wlan0` y admite acceso SSH con clave ED25519 como `afvv2602`. Windows está preparado para SSH Agent y el alias `pi-agents`.
+- **EN PRUEBAS.** El SSD utiliza UAS por USB 2.0 a 480 Mb/s. Esta conexión es provisional por los errores de E/S anteriores en USB 3.0. Siguen abiertos el diagnóstico de USB 3.0 y la estabilidad prolongada del SSD. [INC-006](docs/05-resolucion-problemas.md).
+- **PENDIENTE en Raspberry Pi OS Lite.** Tailscale, Docker Engine y Compose, FastAPI, persistencia de la aplicación en SQLite, scheduler propio y registro y coordinación de nodos. [Roadmap](docs/00-roadmap.md).
+
+### Comprobaciones históricas de DietPi
 
 - 2026-11-09 · El usuario confirmó el arranque de DietPi desde el SSD por USB 2.0. Continúa el diagnóstico de USB 3.0 en [INC-006](docs/05-resolucion-problemas.md). Las pruebas SSH y Tailscale previas corresponden a la microSD.
 
@@ -30,7 +38,7 @@ El formato registra eventos **comprobados** separadamente de los planes.
 - Aclarado que los hitos de infraestructura de la versión 0.1.0 proceden del registro previo; esta revisión no ha comprobado la Raspberry.
 - Actualizada ADR-0002 para delimitar SSH convencional sobre Tailscale y excluir funciones innecesarias en la primera fase.
 
-### Estado
+### Estado registrado en DietPi sobre microSD
 
 - Raspberry y Windows aparecen en la tailnet; ping, TCP/22 y login SSH por clave funcionan sobre Tailscale estando en LAN. Faltan red externa, reconexión tras reinicio y endurecimiento SSH del servidor.
 - El usuario comunicó que un SSD conectado por USB no se reconocía o no podía utilizarse; se abrió INC-006 con comprobaciones de solo lectura.

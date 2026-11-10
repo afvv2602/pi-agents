@@ -1,19 +1,16 @@
 # 04 — Arquitectura y evolución
 
-> Las verificaciones de red y configuración de esta página corresponden a la instalación en microSD. El 9 de noviembre de 2026 se comunicó el primer arranque desde SSD por USB 2.0. La configuración y el acceso del nuevo sistema siguen pendientes de verificar. [Estado del controlador](dosier-maestro.md).
-
-> Las cajas marcadas como **plan** aún no están implementadas. No deben mostrarse en portfolio como producción.
+El estado del controlador procede del traspaso del 10 de noviembre de 2026. El segundo diagrama describe la arquitectura prevista de tres nodos.
 
 ## Arquitectura actual (comprobada)
 
 ```mermaid
 flowchart LR
-  Admin[Windows / PowerShell] -->|SSH local| Host[pi-agents: Raspberry Pi 4 + DietPi]
-  Admin -->|SSH por Tailscale probado en LAN| Host
-  DHCP[Router doméstico / reserva DHCP] -.-> Host
+  Admin[Windows / OpenSSH] -->|SSH local con ED25519| Host[pi-agents / Raspberry Pi OS Lite]
+  Host -->|USB 2.0 / UAS| SSD[Kingston / sistema y arranque]
 ```
 
-La infraestructura actual incluye Linux, red local, acceso SSH local, usuario administrador y ambos dispositivos unidos a Tailscale. `tailscale ping` ha respondido en ambos sentidos sobre una ruta directa en la LAN; TCP/22 y el login SSH por clave funcionan desde Windows mediante Tailscale. El acceso desde otra red y la reconexión tras reinicio siguen sin verificar.
+La Raspberry utiliza Wi-Fi por `wlan0` y la cuenta administradora `afvv2602`. La verificación de Tailscale en este sistema sigue pendiente. La prueba de SSH por Tailscale desde la LAN corresponde a DietPi en microSD.
 
 ## Arquitectura objetivo (diseño)
 
@@ -35,7 +32,7 @@ El [dosier maestro](dosier-maestro.md) recoge la política de asignación y los 
 
 - Raspberry Pi 4 de 4 GB: suficiente como orquestador ligero, pero no para inferencia local potente.
 - Arquitectura ARM64: comprobar imágenes Docker multiplaforma y dependencias nativas.
-- microSD: vigilar escritura, salud y backups; estudiar SSD antes de usar bases de datos intensivamente.
+- SSD por USB 2.0: comprobar estabilidad a largo plazo y restauración de copias antes de confiarle la persistencia de trabajos.
 - Conectividad Wi-Fi: añadir reintentos, observabilidad y evitar suponer disponibilidad total.
 - Vault Obsidian: iCloud no es un sistema de archivos Linux montado nativamente; habrá que usar un servicio puente en Mac u otra sincronización oficialmente soportada antes de permitir escrituras.
 
@@ -67,7 +64,7 @@ No instalar todos los servicios de inicio: primero healthcheck, logs y autentica
 
 ## Alternativas estudiadas
 
-- DietPi frente a Raspberry Pi OS Lite: menor peso y herramientas simplificadas.
+- Raspberry Pi OS Lite 64-bit sustituyó a DietPi en el controlador. [ADR-0003](adr/0003-raspberry-pi-os-lite.md).
 - Docker Compose frente a K3s: preferir simplicidad en un solo nodo con 4 GB.
 - Tailscale frente a port forwarding: preferir red privada sin exponer SSH.
 - LLM remoto frente a LLM local: optimizar RAM, latencia y capacidad del modelo.

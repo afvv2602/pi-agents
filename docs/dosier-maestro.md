@@ -1,8 +1,8 @@
 # HOMELAB AI · DOSIER MAESTRO DEL PROYECTO
 
-**Versión:** 0.4 — Primer arranque del controlador desde SSD
-**Fecha:** 9 de noviembre de 2026
-**Estado:** DietPi en SSD en configuración · sistema distribuido en diseño
+**Versión:** 0.5 — Migración del controlador a Raspberry Pi OS Lite
+**Fecha:** 10 de noviembre de 2026
+**Estado:** Raspberry Pi OS Lite en SSD por USB 2.0 · estabilidad prolongada en pruebas · sistema distribuido en diseño
 **Proyecto existente:** `pi-agents`
 **Repositorio:** https://github.com/afvv2602/pi-agents
 
@@ -123,20 +123,24 @@ Integrar progresivamente agentes para:
 
 ## NODO-01 · Raspberry Pi
 
-**Hostname verificado en la microSD:** `pi-agents`. El nombre `pi-control` designa el rol propuesto.
+**Hostname verificado en Raspberry Pi OS Lite:** `pi-agents`. El nombre `pi-control` designa el rol propuesto.
 
 | Componente | Especificación |
 |---|---|
 | Equipo | Raspberry Pi 4 Model B |
 | Memoria | 4 GB RAM |
 | Arquitectura | ARM64 |
-| Sistema operativo | DietPi en SSD. La versión v10.8.2 se verificó en la microSD anterior |
+| Sistema operativo | Raspberry Pi OS Lite 64-bit, basado en Debian 13 Trixie. Kernel observado `6.18.50+rpt-rpi-v8` |
 | Disponibilidad objetivo | 24/7 |
-| Conectividad | En la microSD se verificó Wi-Fi con reserva DHCP y SSH por Tailscale desde Windows en LAN. Red del SSD pendiente de verificar |
-| Almacenamiento | Arranque desde SSD Kingston por USB 2.0 confirmado por el usuario. Errores de E/S en USB 3.0 pendientes de diagnóstico ([INC-006](05-resolucion-problemas.md)) |
+| Conectividad | Wi-Fi principal por `wlan0`. Administración por SSH con clave ED25519 y usuario `afvv2602`. Windows preparado para SSH Agent y el alias `pi-agents` |
+| Almacenamiento | SSD Kingston SV300S37A120G de unos 120 GB. Raíz EXT4 en `/dev/sda2`, `/dev/sda1` en `/boot/firmware`. Adaptador UAS en USB 2.0 a 480 Mb/s |
 | Función | Controlador principal |
 
-### Responsabilidades
+Tras la actualización, el sistema reinició correctamente. El reloj estaba sincronizado por NTP en `Europe/Madrid`, la raíz estaba montada y quedaban unos 101 GB libres. `vcgencmd get_throttled` devolvió `0x0`. En los registros filtrados de ese arranque no aparecieron errores de E/S ni de EXT4. Se observaron avisos no críticos de MMC, audio, Bluetooth y Wi-Fi.
+
+Se mantiene el enlace USB 2.0 provisionalmente por los errores anteriores en USB 3.0. Siguen abiertos el diagnóstico del enlace y la estabilidad prolongada del SSD. [Seguimiento de INC-006](05-resolucion-problemas.md).
+
+### Responsabilidades previstas
 
 - API de entrada.
 - Orquestador central.
@@ -253,7 +257,9 @@ El arranque remoto deberá respetar la configuración dual boot y no cambiar de 
 
 # 4. Arquitectura del sistema
 
-## 4.1. Distribución lógica
+## 4.1. Distribución lógica prevista
+
+En Raspberry Pi OS Lite están confirmados el arranque desde SSD y el acceso SSH por clave. Las capas de servicios descritas a continuación forman parte del diseño.
 
 ### Capa 1 · Acceso y red
 
@@ -451,7 +457,7 @@ Los trabajos interrumpidos solo se reintentarán cuando su política lo permita.
 | Inferencia avanzada | llama.cpp |
 | VPN | Tailscale |
 | Control de versiones | Git y GitHub |
-| Sistema Raspberry | Linux 64-bit existente |
+| Sistema Raspberry | Raspberry Pi OS Lite 64-bit (Debian 13 Trixie), verificado en SSD |
 | Sistema secundario | Debian 13 estable sin escritorio, administrado por SSH |
 | Sistema principal Linux | Ubuntu Desktop |
 | Monitorización inicial | Logs estructurados y health checks |
@@ -623,7 +629,7 @@ Funciones futuras:
 
 Objetivo: comunicación privada entre servidores y dispositivos personales.
 
-La instalación anterior en microSD tenía Tailscale operativo en LAN. Queda por verificar en el SSD.
+En DietPi sobre microSD se verificó SSH por Tailscale desde Windows en la LAN. En Raspberry Pi OS Lite están pendientes la comprobación del paquete, del servicio y de la adhesión a la tailnet.
 
 Pendiente:
 
@@ -750,6 +756,8 @@ El proyecto debe justificar cada incorporación mediante necesidad y resultados 
 
 # 11. Hoja de ruta
 
+En el controlador, el orden previsto es comprobar la estabilidad del SSD, verificar Tailscale, validar Docker Engine y Compose, probar FastAPI con persistencia local en SQLite y validar el registro de nodos y el scheduler propio con un trabajo remoto. Los criterios y la evidencia pendiente se mantienen en el [roadmap operativo](00-roadmap.md).
+
 ## FASE 0 · Inventario y diseño
 
 **Objetivo:** documentar infraestructura y decisiones.
@@ -759,7 +767,7 @@ Trabajos:
 - Confirmar VRAM de la 4060 Ti.
 - Identificar modelo exacto del i5.
 - Inventariar discos del secundario.
-- Identificar el dispositivo raíz del nuevo sistema y comprobar estabilidad del SSD y del enlace USB 3.0.
+- Registrar la duración, los arranques y el estado del SSD en USB 2.0 durante uso normal. La raíz ya está identificada. Mantener separado el diagnóstico de USB 3.0.
 - Comprobar conexiones Ethernet.
 - Evaluar consumo energético.
 - Referencia del estado actual de la Raspberry: [roadmap operativo](00-roadmap.md).
@@ -888,7 +896,7 @@ Esta fase no implica instalar todas esas tecnologías, sino mantener una arquite
 | Riesgo | Mitigación prevista |
 |---|---|
 | Raspberry sobrecargada | Mantener únicamente servicios ligeros de control |
-| Pérdida de microSD | SSD y backups |
+| Fallos de E/S en el almacenamiento del controlador | Mantener USB 2.0 de forma provisional, revisar los registros durante uso prolongado y probar una restauración en otro medio |
 | PC principal apagado | Cola persistente y ejecución diferida |
 | Windows activo | Worker opcional y modo ocupado |
 | RX 590 poco útil en inferencia | Priorizar CPU, NAS y servicios |
@@ -1054,13 +1062,13 @@ No se considerará completado un hito únicamente porque el código haya sido ge
 
 # 16. Cuestiones abiertas
 
-Antes de comenzar las instalaciones, hay que resolver:
+Cuestiones abiertas para las siguientes fases:
 
 1. ¿La RTX 4060 Ti tiene 8 o 16 GB de VRAM?
 2. ¿Cuál es el modelo exacto del Intel i5?
 3. ¿Qué discos tiene el PC secundario?
 4. ¿El PC secundario permanecerá encendido 24/7?
-5. ¿Es estable el SSD USB para el uso previsto? El usuario confirmó un arranque por USB 2.0. Queda por verificar su estabilidad.
+5. ¿Durante qué periodo y con qué carga habitual se validará el SSD en USB 2.0? Sigue sin determinarse la causa de los errores de E/S en USB 3.0.
 6. ¿Los tres dispositivos tienen acceso a Ethernet?
 7. ¿Cuánto consume en reposo el PC secundario?
 8. ¿Qué espacio se reservará para Linux en el equipo principal?
@@ -1144,3 +1152,12 @@ Todo ello sin exigir que el usuario conozca qué servidor ha ejecutado cada oper
 ## Registro de actualización · 9 de noviembre de 2026
 
 En «Instalación Raspberry Pi», el usuario confirmó que DietPi arrancó desde el SSD por USB 2.0. El chat describe errores de E/S y reinicios del enlace en USB 3.0. La última incidencia comunicada fue la dificultad para salir de DietPi-Config. Quedan pendientes el acceso a la terminal, la comprobación de la raíz y las pruebas de red y SSH de esta instalación. [Seguimiento del SSD](05-resolucion-problemas.md).
+
+## Registro de actualización · 10 de noviembre de 2026
+
+| Estado | Resultado comunicado por el chat principal |
+|---|---|
+| IMPLEMENTADO | Raspberry Pi OS Lite 64-bit sustituye a DietPi en el controlador. |
+| VERIFICADO | Reinicio tras la actualización, montajes del SSD, NTP y SSH con clave ED25519. El inventario de NODO-01 recoge los valores observados. |
+| EN PRUEBAS | Estabilidad prolongada del SSD en USB 2.0. INC-006 sigue abierta por los antecedentes de E/S en USB 3.0. |
+| PENDIENTE | Tailscale en la nueva instalación, Docker Engine y Compose, FastAPI, SQLite como persistencia de la aplicación, scheduler propio, registro y coordinación de los nodos. |
