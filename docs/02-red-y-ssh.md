@@ -1,6 +1,6 @@
 # 02 — Red local y SSH desde Windows
 
-La Raspberry utiliza `wlan0` y responde al acceso SSH por clave ED25519 con el usuario administrador `afvv2602`. Su hostname es `pi-agents`. Windows está preparado para usar SSH Agent y el alias local `pi-agents`. La validación de Tailscale en esta instalación sigue [pendiente](03-tailscale.md).
+La Raspberry utiliza `wlan0` y responde al acceso SSH por clave ED25519 con el usuario administrador `afvv2602`. Su hostname es `pi-agents`. Windows está preparado para usar SSH Agent y el alias local `pi-agents`. En la LAN también se verificó el acceso por clave a la dirección Tailscale de la Raspberry. [Prueba desde Windows y validaciones pendientes](03-tailscale.md).
 
 ## Configurar el alias local
 

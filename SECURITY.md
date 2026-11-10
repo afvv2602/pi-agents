@@ -10,6 +10,10 @@ Este es un proyecto personal de infraestructura y aprendizaje. Los detalles sens
 - SSID, credenciales de router, MAC real, inventarios completos de dispositivos.
 - Contenido privado de Obsidian o capturas sin anonimizar.
 
+## Acceso a Controller v0.1
+
+El puerto 8000 está vinculado a `127.0.0.1` en el host. `/health` no exige autenticación de aplicación. El acceso desde Windows se verificó mediante un túnel SSH con clave ED25519 sobre Tailscale en LAN. Los futuros endpoints de gestión requieren autenticación y autorización antes de exponerse.
+
 ## Controles previstos
 
 - Usuario administrador no-root y uso limitado de `sudo`.
