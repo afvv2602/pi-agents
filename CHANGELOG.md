@@ -4,13 +4,20 @@ El formato registra eventos **comprobados** separadamente de los planes.
 
 ## [Sin publicar]
 
+### 2026-11-10 · Fase 4 del controlador completada
+
+- **VERIFICADO.** Docker ejecutó `hello-world` para ARM64. Docker Compose mostró `v5.7.0` y el servicio Docker estaba activo y habilitado. Su directorio de datos era `/var/lib/docker` en el SSD Kingston.
+- El contenedor `probe` conservó `/data/marker` en un volumen con nombre tras `docker compose down` y `up -d`. Ambas lecturas mostraron `Tue Nov 10 01:24:11 UTC 2026`. [Prueba de la fase 4](docs/07-docker.md).
+- La fase 3 ya había verificado `tailscaled` activo y habilitado y una sesión SSH desde Windows por la IP Tailscale de la Raspberry en la LAN. El banner de esa sesión mostró el kernel `6.18.60+rpt-rpi-v8`. Quedan pendientes el acceso desde otra red y la reconexión tras reiniciar. [Guía de Tailscale](docs/03-tailscale.md).
+- **PENDIENTE.** Fase 5, primer controlador FastAPI con persistencia en SQLite. Continúan el seguimiento del SSD en USB 2.0 y el diagnóstico de USB 3.0. [Roadmap del controlador](docs/00-roadmap.md).
+
 ### 2026-11-10 · Migración a Raspberry Pi OS Lite 64-bit
 
 - **IMPLEMENTADO y VERIFICADO.** El chat principal confirmó Raspberry Pi OS Lite sobre Debian 13 Trixie en la Raspberry Pi 4 ARM64 de 4 GB, con kernel `6.18.50+rpt-rpi-v8`. El sistema reinició tras actualizar. El SSD Kingston SV300S37A120G de unos 120 GB aloja la raíz EXT4 en `/dev/sda2` y la partición de arranque en `/dev/sda1`, montada en `/boot/firmware`.
 - En el arranque observado quedaban unos 101 GB libres. NTP estaba sincronizado en `Europe/Madrid` y `vcgencmd get_throttled` devolvió `0x0`. El registro filtrado no mostró errores de E/S ni EXT4. Se comunicaron advertencias no críticas de MMC, audio, Bluetooth y Wi-Fi.
 - El host `pi-agents` utiliza Wi-Fi por `wlan0` y admite acceso SSH con clave ED25519 como `afvv2602`. Windows está preparado para SSH Agent y el alias `pi-agents`.
 - **EN PRUEBAS.** El SSD utiliza UAS por USB 2.0 a 480 Mb/s. Esta conexión es provisional por los errores de E/S anteriores en USB 3.0. Siguen abiertos el diagnóstico de USB 3.0 y la estabilidad prolongada del SSD. [INC-006](docs/05-resolucion-problemas.md).
-- **PENDIENTE en Raspberry Pi OS Lite.** Tailscale, Docker Engine y Compose, FastAPI, persistencia de la aplicación en SQLite, scheduler propio y registro y coordinación de nodos. [Roadmap](docs/00-roadmap.md).
+- **PENDIENTE al documentar la migración.** Tailscale, Docker Engine y Compose, FastAPI, persistencia de la aplicación en SQLite, scheduler propio y registro y coordinación de nodos. [Roadmap](docs/00-roadmap.md).
 
 ### Comprobaciones históricas de DietPi
 

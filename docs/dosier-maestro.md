@@ -1,8 +1,8 @@
 # HOMELAB AI · DOSIER MAESTRO DEL PROYECTO
 
-**Versión:** 0.5 — Migración del controlador a Raspberry Pi OS Lite
+**Versión:** 0.6 — Docker y persistencia de volúmenes verificados
 **Fecha:** 10 de noviembre de 2026
-**Estado:** Raspberry Pi OS Lite en SSD por USB 2.0 · estabilidad prolongada en pruebas · sistema distribuido en diseño
+**Estado:** Fase 4 del controlador completada · SSD en seguimiento · API y sistema distribuido pendientes
 **Proyecto existente:** `pi-agents`
 **Repositorio:** https://github.com/afvv2602/pi-agents
 
@@ -130,10 +130,12 @@ Integrar progresivamente agentes para:
 | Equipo | Raspberry Pi 4 Model B |
 | Memoria | 4 GB RAM |
 | Arquitectura | ARM64 |
-| Sistema operativo | Raspberry Pi OS Lite 64-bit, basado en Debian 13 Trixie. Kernel observado `6.18.50+rpt-rpi-v8` |
+| Sistema operativo | Raspberry Pi OS Lite 64-bit, basado en Debian 13 Trixie. Kernel `6.18.50+rpt-rpi-v8` en el traspaso de migración y `6.18.60+rpt-rpi-v8` en el banner SSH de la fase 3 |
 | Disponibilidad objetivo | 24/7 |
 | Conectividad | Wi-Fi principal por `wlan0`. Administración por SSH con clave ED25519 y usuario `afvv2602`. Windows preparado para SSH Agent y el alias `pi-agents` |
 | Almacenamiento | SSD Kingston SV300S37A120G de unos 120 GB. Raíz EXT4 en `/dev/sda2`, `/dev/sda1` en `/boot/firmware`. Adaptador UAS en USB 2.0 a 480 Mb/s |
+| Acceso privado | SSH por clave desde Windows a la dirección Tailscale de la Raspberry en LAN. Servicio `tailscaled` activo y habilitado |
+| Contenedores | Docker Engine y Compose `v5.7.0` verificados. `/var/lib/docker` reside en la raíz del SSD |
 | Función | Controlador principal |
 
 Tras la actualización, el sistema reinició correctamente. El reloj estaba sincronizado por NTP en `Europe/Madrid`, la raíz estaba montada y quedaban unos 101 GB libres. `vcgencmd get_throttled` devolvió `0x0`. En los registros filtrados de ese arranque no aparecieron errores de E/S ni de EXT4. Se observaron avisos no críticos de MMC, audio, Bluetooth y Wi-Fi.
@@ -259,7 +261,7 @@ El arranque remoto deberá respetar la configuración dual boot y no cambiar de 
 
 ## 4.1. Distribución lógica prevista
 
-En Raspberry Pi OS Lite están confirmados el arranque desde SSD y el acceso SSH por clave. Las capas de servicios descritas a continuación forman parte del diseño.
+En Raspberry Pi OS Lite se han verificado el arranque desde SSD, SSH por Tailscale desde la LAN y Docker con un volumen persistente. La API, el scheduler y los workers que se describen en estas capas siguen en diseño.
 
 ### Capa 1 · Acceso y red
 
@@ -448,14 +450,14 @@ Los trabajos interrumpidos solo se reintentarán cuando su política lo permita.
 | Lenguaje principal | Python |
 | API | FastAPI |
 | Validación | Pydantic |
-| Contenedores | Docker Compose |
+| Contenedores | Docker Engine y Compose, verificados en la Raspberry |
 | Base de datos inicial | SQLite |
 | Coordinación | Scheduler Python propio |
 | Workers | Servicios Python propios |
 | Comunicación inicial | HTTP privado |
 | Inferencia | Ollama |
 | Inferencia avanzada | llama.cpp |
-| VPN | Tailscale |
+| VPN | Tailscale, verificado para SSH en LAN en la Raspberry |
 | Control de versiones | Git y GitHub |
 | Sistema Raspberry | Raspberry Pi OS Lite 64-bit (Debian 13 Trixie), verificado en SSD |
 | Sistema secundario | Debian 13 estable sin escritorio, administrado por SSH |
@@ -629,11 +631,11 @@ Funciones futuras:
 
 Objetivo: comunicación privada entre servidores y dispositivos personales.
 
-En DietPi sobre microSD se verificó SSH por Tailscale desde Windows en la LAN. En Raspberry Pi OS Lite están pendientes la comprobación del paquete, del servicio y de la adhesión a la tailnet.
+Tras migrar desde DietPi se repitió con éxito el acceso SSH desde Windows hacia la dirección Tailscale de Raspberry Pi OS Lite en la LAN. Ambos equipos figuraban en la tailnet y `tailscaled` estaba activo y habilitado. [Prueba de la fase 3](03-tailscale.md).
 
 Pendiente:
 
-- Incorporar el secundario y verificar el cliente del principal bajo Linux. Repetir en el SSD la prueba desde Windows en la LAN. Quedan pendientes la prueba desde otra red y la reconexión tras reinicio.
+- Incorporar el secundario y verificar el cliente del principal bajo Linux. Repetir la conexión SSH desde una red externa y tras reiniciar la Raspberry.
 - Configurar nombres internos.
 - Revisar políticas de acceso.
 - Definir qué aplicaciones estarán disponibles remotamente.
@@ -756,7 +758,7 @@ El proyecto debe justificar cada incorporación mediante necesidad y resultados 
 
 # 11. Hoja de ruta
 
-En el controlador, el orden previsto es comprobar la estabilidad del SSD, verificar Tailscale, validar Docker Engine y Compose, probar FastAPI con persistencia local en SQLite y validar el registro de nodos y el scheduler propio con un trabajo remoto. Los criterios y la evidencia pendiente se mantienen en el [roadmap operativo](00-roadmap.md).
+El [roadmap operativo](00-roadmap.md) numera las fases de la Raspberry según el chat principal. La fase 4 ha verificado Docker y Compose. Siguen pendientes la fase 5 (FastAPI y SQLite) y la fase 6 (orquestación y registro de nodos). El plan general del homelab que sigue mantiene su numeración original.
 
 ## FASE 0 · Inventario y diseño
 
@@ -783,8 +785,8 @@ Trabajos:
 - Identificar el disco de destino por modelo y capacidad. Preparar el USB con Debian 13 netinst amd64, instalar y verificar el primer arranque y una sesión SSH desde el principal.
 - Preparar dual boot del principal.
 - Configurar Linux, SSH y drivers.
-- Instalar Tailscale.
-- Configurar Docker.
+- Extender la conectividad Tailscale al resto de nodos previstos y verificarla entre redes.
+- Preparar Docker en los demás nodos que lo requieran. En la Raspberry está verificado.
 - Asignar nombres internos.
 - Verificar comunicación.
 - Evaluar Wake-on-LAN.
@@ -1153,7 +1155,7 @@ Todo ello sin exigir que el usuario conozca qué servidor ha ejecutado cada oper
 
 En «Instalación Raspberry Pi», el usuario confirmó que DietPi arrancó desde el SSD por USB 2.0. El chat describe errores de E/S y reinicios del enlace en USB 3.0. La última incidencia comunicada fue la dificultad para salir de DietPi-Config. Quedan pendientes el acceso a la terminal, la comprobación de la raíz y las pruebas de red y SSH de esta instalación. [Seguimiento del SSD](05-resolucion-problemas.md).
 
-## Registro de actualización · 10 de noviembre de 2026
+## Registro de actualización · 10 de noviembre de 2026 · Migración
 
 | Estado | Resultado comunicado por el chat principal |
 |---|---|
@@ -1161,3 +1163,9 @@ En «Instalación Raspberry Pi», el usuario confirmó que DietPi arrancó desde
 | VERIFICADO | Reinicio tras la actualización, montajes del SSD, NTP y SSH con clave ED25519. El inventario de NODO-01 recoge los valores observados. |
 | EN PRUEBAS | Estabilidad prolongada del SSD en USB 2.0. INC-006 sigue abierta por los antecedentes de E/S en USB 3.0. |
 | PENDIENTE | Tailscale en la nueva instalación, Docker Engine y Compose, FastAPI, SQLite como persistencia de la aplicación, scheduler propio, registro y coordinación de los nodos. |
+
+## Registro de actualización · 10 de noviembre de 2026 · Cierre de la fase 4 del controlador
+
+Las capturas de «Investiga distribuciones Raspberry Pi» documentan SSH por Tailscale desde Windows en LAN y la ejecución de `hello-world` para ARM64 en Raspberry Pi OS Lite. El servicio Docker estaba activo y habilitado. En el proyecto Compose de prueba, `probe` leyó el mismo marcador (`Tue Nov 10 01:24:11 UTC 2026`) antes y después de eliminar y recrear el contenedor. La fase 4 queda **VERIFICADA**. [Procedimiento y resultados de Docker](07-docker.md).
+
+La fase 5, correspondiente al primer controlador FastAPI con SQLite, sigue **PENDIENTE**. También quedan pendientes el acceso desde otra red, la reconexión tras reinicio y la validación prolongada del SSD en USB 2.0.

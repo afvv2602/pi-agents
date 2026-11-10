@@ -7,10 +7,13 @@ El estado del controlador procede del traspaso del 10 de noviembre de 2026. El s
 ```mermaid
 flowchart LR
   Admin[Windows / OpenSSH] -->|SSH local con ED25519| Host[pi-agents / Raspberry Pi OS Lite]
+  Admin -->|SSH por Tailscale probado en LAN| Host
   Host -->|USB 2.0 / UAS| SSD[Kingston / sistema y arranque]
+  Host --> Engine[Docker Engine y Compose]
+  Engine -->|Volumen de prueba| SSD
 ```
 
-La Raspberry utiliza Wi-Fi por `wlan0` y la cuenta administradora `afvv2602`. La verificación de Tailscale en este sistema sigue pendiente. La prueba de SSH por Tailscale desde la LAN corresponde a DietPi en microSD.
+La Raspberry utiliza Wi-Fi por `wlan0` y la cuenta administradora `afvv2602`. En Raspberry Pi OS Lite se verificaron el acceso SSH por Tailscale desde Windows en LAN y la conservación de un archivo al recrear un contenedor. FastAPI, SQLite y los workers siguen previstos. [Prueba de la fase 4](07-docker.md).
 
 ## Arquitectura objetivo (diseño)
 

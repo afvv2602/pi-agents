@@ -1,21 +1,23 @@
 # Pi Agents — Raspberry Pi AI Orchestration Server
 
-La **Raspberry Pi 4 de 4 GB** arranca desde SSD con **Raspberry Pi OS Lite 64-bit (Debian 13 Trixie)**. El chat principal confirmó el reinicio tras actualizar y el acceso SSH con clave ED25519. El siguiente hito es comprobar la estabilidad del SSD durante uso prolongado. [Dosier maestro del homelab](docs/dosier-maestro.md).
+La **Raspberry Pi 4 de 4 GB** arranca desde SSD con **Raspberry Pi OS Lite 64-bit (Debian 13 Trixie)**. La fase 4 del controlador está **completada**. Docker ejecutó una imagen ARM64 y Compose conservó un archivo en un volumen del SSD después de recrear el contenedor. [Dosier maestro del homelab](docs/dosier-maestro.md).
 
-**English overview.** Pi Agents is a headless Raspberry Pi controller for a planned three-node AI homelab. The OS migration and SSH key access are verified. Distributed job execution is planned.
+**English overview.** Pi Agents is a headless Raspberry Pi controller for a planned three-node AI homelab. SSH over Tailscale was verified on the LAN. Docker Engine and Compose passed a volume persistence test. The application API and distributed job execution are planned.
 
 ## Estado del controlador · 10 de noviembre de 2026
 
 | Componente | Observación comunicada |
 |---|---|
-| Sistema | Raspberry Pi 4, 4 GB, ARM64. Kernel observado `6.18.50+rpt-rpi-v8` |
+| Sistema | Raspberry Pi 4, 4 GB, ARM64. Kernel `6.18.60+rpt-rpi-v8` en la sesión SSH de la fase 3 |
 | Almacenamiento | Kingston SV300S37A120G de unos 120 GB. Raíz EXT4 en `/dev/sda2`, con unos 101 GB libres. `/dev/sda1` montada en `/boot/firmware` |
 | Enlace USB | USB 2.0 a 480 Mb/s con controlador UAS. Se mantiene provisionalmente por errores de E/S anteriores en USB 3.0 |
 | Administración | Hostname `pi-agents`, usuario `afvv2602`, Wi-Fi principal por `wlan0`. Acceso SSH por clave ED25519. Windows preparado para SSH Agent y el alias `pi-agents` |
+| Red privada | `tailscaled` activo y habilitado. SSH por Tailscale desde Windows verificado en LAN. Pendientes red externa y reconexión tras reiniciar |
+| Contenedores | Docker Engine activo y habilitado. Compose `v5.7.0`. El volumen de prueba conservó su marcador tras `docker compose down` y `up -d` |
 | Salud tras actualizar | Reinicio correcto, reloj sincronizado por NTP en `Europe/Madrid` y `vcgencmd get_throttled` con resultado `0x0` |
 | Registros del arranque observado | Sin errores de E/S ni de EXT4 en las líneas filtradas. Avisos no críticos de MMC, audio, Bluetooth y Wi-Fi |
 
-La estabilidad prolongada del SSD y la causa de los fallos en USB 3.0 siguen abiertas. En la instalación nueva están **pendientes de verificar** Tailscale, Docker Engine y Docker Compose, FastAPI, SQLite como persistencia de la aplicación, el scheduler/orquestador propio y el registro y la coordinación de nodos. [Seguimiento del SSD](docs/05-resolucion-problemas.md) · [Fases y criterios de aceptación](docs/00-roadmap.md).
+El siguiente hito es la **fase 5**, probar FastAPI y la persistencia de la aplicación en SQLite. El scheduler y el registro y coordinación de nodos corresponden a la fase 6. Siguen abiertas la estabilidad prolongada del SSD y la causa de los fallos en USB 3.0. [Seguimiento del SSD](docs/05-resolucion-problemas.md) · [Fases y criterios de aceptación](docs/00-roadmap.md).
 
 ## Acceso desde Windows
 
@@ -37,7 +39,8 @@ La Raspberry conservará el estado y los trabajos pendientes cuando un PC esté 
 
 - [Instalación de Raspberry Pi OS Lite y comprobaciones de arranque](docs/01-instalacion-raspberry-pi-os.md)
 - [Operación diaria, actualizaciones y seguimiento de estabilidad](docs/06-operaciones.md)
-- [Validación pendiente de Tailscale](docs/03-tailscale.md)
+- [Tailscale y acceso SSH verificado en LAN](docs/03-tailscale.md)
+- [Fase 4 de Docker y Compose, procedimiento y resultados](docs/07-docker.md)
 - [Decisión de migrar a Raspberry Pi OS Lite](docs/adr/0003-raspberry-pi-os-lite.md)
 - [Política de seguridad y tratamiento de evidencias](SECURITY.md)
 

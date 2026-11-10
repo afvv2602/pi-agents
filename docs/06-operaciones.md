@@ -50,7 +50,7 @@ sudo apt full-upgrade
 
 Revisar los cambios que propone APT antes de confirmarlos. Antes de actualizaciones mayores, comprobar copias, espacio libre y vía de recuperación local. Tras un reinicio, verificar los montajes, SSH y el registro del arranque. [Mantenimiento de Raspberry Pi OS](https://www.raspberrypi.com/documentation/computers/os.html).
 
-## Tailscale (verificación pendiente en Raspberry Pi OS Lite)
+## Tailscale en Raspberry Pi OS Lite
 
 ```bash
 sudo systemctl status tailscaled
@@ -59,7 +59,11 @@ tailscale ip -4
 journalctl -u tailscaled --no-pager -n 50
 ```
 
-Los resultados Tailscale deben registrarse **solo después de instalar y probar** la integración.
+El servicio estaba activo y habilitado en la prueba de SSH desde Windows en la LAN. Para contrastar la recuperación tras reiniciar o el acceso desde otra red, seguir la [guía de Tailscale](03-tailscale.md).
+
+## Docker en el SSD
+
+La fase 4 verificó la ejecución ARM64 y la persistencia de un volumen al recrear el contenedor. Para repetir las lecturas de servicio, ocupación y logs, consultar la [prueba de Docker y Compose](07-docker.md).
 
 ## Seguridad
 

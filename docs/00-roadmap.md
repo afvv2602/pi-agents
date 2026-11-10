@@ -1,16 +1,17 @@
 # Roadmap y criterios de aceptación
 
-Estado comunicado el 10 de noviembre de 2026 para el controlador `pi-agents`. La migración está **IMPLEMENTADA**. El reinicio tras actualizar, el arranque desde el SSD, la hora sincronizada y el acceso SSH con clave ED25519 están **VERIFICADOS**. El [dosier maestro](dosier-maestro.md) recoge las fases del homelab completo.
+Las fases numeradas aquí siguen la secuencia del chat «Investiga distribuciones Raspberry Pi». El [dosier maestro](dosier-maestro.md) mantiene por separado las fases del homelab de tres nodos.
 
-| Fase del controlador | Estado | Evidencia necesaria para cerrarla |
+| Fase del controlador | Estado | Evidencia y criterio de cierre |
 |---|---|---|
-| 1. Estabilidad del SSD en USB 2.0 | EN PRUEBAS | Registrar el periodo observado y la carga habitual. Tras varios arranques, verificar ambos montajes, revisar si hay desconexiones USB, reinicios del enlace o errores de E/S y EXT4, y anotar el resultado de `vcgencmd get_throttled`. Mantener separado el diagnóstico de USB 3.0. |
-| 2. Tailscale sobre Raspberry Pi OS Lite | PENDIENTE | Comprobar paquete, servicio y adhesión a la tailnet. Validar ping, TCP/22 y SSH por clave en LAN y desde otra red. Repetir tras reiniciar y conservar SSH local sin publicar puertos. [Guía de pruebas](03-tailscale.md). |
-| 3. Docker Engine y Docker Compose | PENDIENTE | Registrar versiones de Engine y del complemento Compose. Ejecutar un servicio ARM64 de prueba, revisar sus logs y comprobar que recupera sus datos tras recrear el contenedor. |
-| 4. API y persistencia | PENDIENTE | Probar salud y autenticación de FastAPI en la red autorizada, incluido el rechazo de una petición sin autorización. Crear un registro de prueba en SQLite y recuperarlo tras reiniciar la aplicación. |
-| 5. Registro de nodos y orquestación | PENDIENTE | Registrar un worker y sus capacidades, observar su heartbeat y comprobar que el scheduler propio conserva un trabajo con el nodo ausente. Al volver el nodo, ejecutar el trabajo y registrar resultado y estado en la Raspberry. |
+| 1. Instalación de Raspberry Pi OS Lite | VERIFICADO | Raspberry Pi OS Lite 64-bit arranca desde el SSD Kingston con la raíz EXT4 en `/dev/sda2`. |
+| 2. Diagnóstico y actualización inicial | VERIFICADO | Reinicio tras actualizar, montajes, sincronización NTP y acceso SSH con ED25519 comprobados. La observación prolongada del SSD continúa. |
+| 3. Tailscale y acceso privado | VERIFICADO en LAN | `tailscaled` activo y habilitado. Windows abrió SSH por clave hacia la dirección Tailscale de la Raspberry. Pruebas desde otra red y tras reiniciar pendientes. [Evidencia y controles](03-tailscale.md). |
+| 4. Docker Engine y Docker Compose | VERIFICADO | `hello-world` ejecutado en ARM64, Compose `v5.7.0` y servicio Docker activo y habilitado. El volumen conservó el marcador al recrear el contenedor. [Prueba y resultados](07-docker.md). |
+| 5. FastAPI y persistencia en SQLite | PENDIENTE | Obtener `GET /health` y verificar que el valor inicial guardado en SQLite sobrevive a la recreación del controlador. Validar acceso privado y rechazo de peticiones no autorizadas según el diseño. |
+| 6. Registro de nodos y orquestación | PENDIENTE | Registrar un worker y sus capacidades, observar su heartbeat y comprobar que el scheduler propio conserva un trabajo con el nodo ausente. Al volver el nodo, ejecutar el trabajo y registrar resultado y estado en la Raspberry. |
 
-En el último arranque, los registros filtrados estaban libres de errores de E/S y EXT4. Falta acordar y documentar el periodo de observación representativo para la fase 1. [Operación y seguimiento](06-operaciones.md).
+**Estabilidad del SSD en USB 2.0 · EN PRUEBAS.** Falta fijar la duración y la carga del periodo de observación. Registrar montajes, desconexiones USB, errores de E/S o EXT4 y `vcgencmd get_throttled` durante uso habitual y tras varios arranques. La causa de los fallos históricos en USB 3.0 sigue abierta. [Operación y seguimiento](06-operaciones.md).
 
 ## Controles y fases posteriores
 

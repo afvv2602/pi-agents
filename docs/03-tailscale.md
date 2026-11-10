@@ -1,12 +1,12 @@
 # 03 — Acceso remoto con Tailscale
 
-**PENDIENTE en Raspberry Pi OS Lite.** Falta verificar el paquete, el servicio, la adhesión del controlador a la tailnet y el acceso desde Windows. Se mantiene como objetivo SSH convencional sobre la red privada con la cuenta `afvv2602`, sin publicar TCP/22. [Decisión de acceso remoto](adr/0002-acceso-remoto-tailscale.md).
+**Fase 3 · SSH por Tailscale verificado en LAN el 10 de noviembre de 2026.** En Raspberry Pi OS Lite, `tailscale status` mostró la Raspberry y el cliente Windows en la misma tailnet. `tailscaled` estaba `active` y `enabled`. Desde PowerShell se abrió una sesión SSH como `afvv2602` hacia la IP Tailscale de la Raspberry usando la identidad ED25519. OpenSSH reconoció la clave de host conocida por LAN. Faltan una prueba desde otra red y una reconexión después de reiniciar la Raspberry. [Decisión de acceso remoto](adr/0002-acceso-remoto-tailscale.md).
 
 ## Evidencia histórica · DietPi en microSD
 
 El 29 de octubre se documentaron Tailscale 1.104.4, `tailscaled` activo y ambos dispositivos en la misma tailnet. En la LAN hubo ping en ambos sentidos por ruta directa, TCP/22 accesible y login de `piadmin` con clave pública. Quedaron pendientes la prueba desde otra red y la reconexión después de un reinicio. Las capturas y su alcance se describen en el [historial de cambios](../CHANGELOG.md).
 
-## Preparación e instalación para la fase pendiente
+## Preparación para reproducir la instalación
 
 1. Desde la LAN, comprobar `ssh pi-agents` y conservar abierta esa sesión. En la Raspberry, revisar `cat /etc/os-release`, `dpkg --print-architecture`, `df -h /`, `timedatectl status` y `sudo dpkg --audit`.
 2. Comprobar primero si existe el paquete con `dpkg-query -W tailscale` y si hay servicio con `systemctl is-active tailscaled`. Si falta el paquete, seguir los pasos de APT publicados para Debian Trixie, con su clave de firma y repositorio. Registrar la versión con `tailscale version` y comprobar el servicio. [Paquetes oficiales para Debian Trixie](https://pkgs.tailscale.com/stable/#debian-trixie).
@@ -38,8 +38,9 @@ El ping comprueba la ruta, TCP/22 la disponibilidad del puerto y la sesión SSH 
 
 ## Criterios de aceptación
 
-- [ ] Registrar versión, `tailscaled` activo y los dos equipos visibles en la misma tailnet.
-- [ ] En LAN, verificar ping en ambos sentidos y TCP/22 y login SSH por clave desde Windows hacia la dirección Tailscale.
+- [x] Comprobar que `tailscaled` está activo y habilitado y que ambos equipos aparecen en la tailnet.
+- [x] Abrir una sesión SSH por clave desde Windows en la LAN hacia la dirección Tailscale de la Raspberry.
+- [ ] Registrar la versión instalada y las salidas de las pruebas independientes de ping bidireccional y TCP/22 en Raspberry Pi OS Lite.
 - [ ] Desconectar Windows de la LAN doméstica y repetir ping, TCP/22 y SSH desde otra red.
 - [ ] Tras un reinicio planificado de la Raspberry, comprobar el servicio, el acceso por la tailnet y el acceso por `ssh pi-agents` desde la LAN.
 - [ ] Confirmar que no hay redirección WAN de TCP/22. Mantener el alcance acordado sin Tailscale SSH, exit node ni subnet router.
