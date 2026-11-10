@@ -7,8 +7,8 @@ echo =======================================
 echo     Pi Agents ^| SSH local
  echo =======================================
 echo.
-echo Conectando usando el alias SSH pi-agents-local...
-ssh pi-agents-local
+echo Conectando usando el alias SSH pi-agents...
+ssh pi-agents
 set "SSH_EXIT=%ERRORLEVEL%"
 echo.
 if not "%SSH_EXIT%"=="0" echo Error o desconexion SSH. Codigo: %SSH_EXIT%

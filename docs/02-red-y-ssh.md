@@ -1,124 +1,65 @@
-# 02 — Red, DHCP y administración SSH
+# 02 — Red local y SSH desde Windows
 
-> Las verificaciones de red y configuración de esta página corresponden a la instalación en microSD. El 9 de noviembre de 2026 se comunicó el primer arranque desde SSD por USB 2.0. La configuración y el acceso del nuevo sistema siguen pendientes de verificar. [Estado del controlador](dosier-maestro.md).
+La Raspberry utiliza `wlan0` y responde al acceso SSH por clave ED25519 con el usuario administrador `afvv2602`. Su hostname es `pi-agents`. Windows está preparado para usar SSH Agent y el alias local `pi-agents`. La validación de Tailscale en esta instalación sigue [pendiente](03-tailscale.md).
 
-**Estado:** LAN/SSH funcionales; reserva DHCP registrada. Autenticación exclusivamente por clave pendiente de comprobar y reforzar.
+## Configurar el alias local
 
-## Contexto
-
-- Cliente: Windows con OpenSSH desde PowerShell.
-- Servidor: DietPi en Raspberry Pi 4, interfaz principal Wi-Fi `wlan0`.
-- Router: Movistar RTF8115VW.
-- Hostname: `pi-agents`.
-- La IP local real, MAC y SSID se excluyen del repositorio público.
-
-## Incidente de subredes durante el arranque
-
-Inicialmente Windows y Raspberry estaban en **subredes distintas** (`192.168.1.0/24` vs. `192.168.68.0/24`). Intentar SSH a la Raspberry produjo `Connection timed out`. Tras conectar DietPi a la red doméstica correcta, se pudo acceder localmente.
-
-Para diagnosticar:
-
-```powershell
-ipconfig
-Test-NetConnection <IP_LOCAL> -Port 22
-tracert -d <IP_LOCAL>
-```
-
-```bash
-ip -br -4 addr
-ip route
-```
-
-## Reserva DHCP en router Movistar
-
-Se verificaron varias instancias DHCP en `Configuration > LAN Setting > LAN DHCP`:
-
-- Índice 0: rango condicionado para `IAL` (no apto para cliente general).
-- Índice 1: rango condicionado `TEF_IOT` (no apto para cliente general).
-- Índice 2: deshabilitado.
-- **Índice 3:** pool doméstico `192.168.1.33–192.168.1.199`, sin condición de Vendor ID.
-
-Se añadió una entrada **habilitada** en `índice 3 > Static Lease` asociando la MAC de `wlan0` a la IP local asignada. Se observó posteriormente conectividad de la Raspberry en la IP reservada.
-
-**Importante:** registrar una reserva no garantiza al 100 % su permanencia tras todos los reinicios o cambios de firmware. Revalidar después de actualizar el router y al cambiar interfaz de red.
-
-## Administración sin root directo
-
-Se creó el usuario `piadmin` y se comprobó:
-
-```bash
-sudo whoami
-# root
-```
-
-El shell de `piadmin` es el recomendado para administración habitual; `sudo` para cambios privilegiados. El acceso directo de root deberá restringirse tras verificar acceso alternativo.
-
-## SSH desde Windows
-
-Se configuró y verificó el alias `pi-agents-local` del cliente OpenSSH. Ejemplo publicable de `%USERPROFILE%\.ssh\config`:
+En Windows, editar `%USERPROFILE%\.ssh\config` (sin extensión). Sustituir `<IP_LOCAL>` por la dirección LAN comprobada y ajustar `IdentityFile` al nombre de la clave ED25519 que ya tiene autorizada la Raspberry. El nombre de archivo de este ejemplo es orientativo.
 
 ```sshconfig
-Host pi-agents-local
+Host pi-agents
     HostName <IP_LOCAL>
-    User piadmin
+    User afvv2602
     IdentityFile ~/.ssh/id_ed25519_pi_agents
     IdentitiesOnly yes
 ```
 
-En el equipo real se reemplaza `<IP_LOCAL>` por la dirección asignada; **no publicar la configuración real**.
-
-Comprobación del alias desde PowerShell:
+Desde PowerShell se puede revisar la configuración efectiva sin abrir una conexión. Deben aparecer el destino LAN elegido, `user afvv2602` y la ruta de la identidad prevista.
 
 ```powershell
-ssh -G pi-agents-local | Select-String '^hostname '
-ssh pi-agents-local
+ssh -G pi-agents | Select-String '^(hostname|user|identityfile) '
 ```
 
-### Reproducir la configuración de clave SSH en Windows
+## Cargar la clave en SSH Agent
 
-En PowerShell **local de Windows** (no dentro del shell Linux):
+Si hay que habilitar el agente de OpenSSH en Windows, ejecutar estos comandos una vez en PowerShell **como administrador**.
 
 ```powershell
-New-Item -ItemType Directory -Force -Path "$env:USERPROFILE\.ssh"
-ssh-keygen -t ed25519 -a 64 -f "$env:USERPROFILE\.ssh\id_ed25519_pi_agents" -C "windows-pi-agents"
+Set-Service -Name ssh-agent -StartupType Automatic
+Start-Service ssh-agent
+Get-Service ssh-agent
 ```
 
-Proteger la clave privada con una frase de paso. La clave pública termina en `.pub`; **nunca copiar la privada al servidor**.
-
-Con una sesión SSH por contraseña todavía disponible, autorizar la clave pública:
+Después, en PowerShell **con la cuenta habitual de Windows**, cargar la clave existente y comprobar que aparece una identidad ED25519. Usar la misma ruta que en `IdentityFile`. La frase de paso desbloquea la clave en el cliente. [Gestión de claves en OpenSSH para Windows](https://learn.microsoft.com/en-us/windows-server/administration/openssh/openssh_keymanagement).
 
 ```powershell
-Get-Content "$env:USERPROFILE\.ssh\id_ed25519_pi_agents.pub" | ssh piadmin@<IP_LOCAL> "umask 077; mkdir -p ~/.ssh; cat >> ~/.ssh/authorized_keys; chmod 700 ~/.ssh; chmod 600 ~/.ssh/authorized_keys"
+ssh-add "$env:USERPROFILE\.ssh\id_ed25519_pi_agents"
+ssh-add -l
 ```
 
-Antes de endurecer el servidor, probar la clave explícitamente sin recurrir a la contraseña de usuario. Una frase de paso de la **clave privada local** puede seguir siendo solicitada:
+Para una instalación nueva que necesite un par de claves, elegir un nombre de archivo libre, ejecutar `ssh-keygen -t ed25519` y proteger la privada con una frase de paso. Autorizar en la Raspberry el archivo público `.pub` durante la [preparación del sistema](01-instalacion-raspberry-pi-os.md). La clave privada permanece en Windows.
+
+## Verificar el equipo y la sesión
+
+Una reinstalación puede cambiar la clave de host. Si OpenSSH avisa de un cambio, contrastar la huella mostrada con la obtenida por una vía fiable, por ejemplo en la consola física con `ssh-keygen -lf /etc/ssh/ssh_host_ed25519_key.pub` si se negocia ED25519. Tras confirmar la identidad del equipo, actualizar únicamente la entrada antigua del destino en `known_hosts`.
 
 ```powershell
-ssh -o PreferredAuthentications=publickey -o PasswordAuthentication=no -i "$env:USERPROFILE\.ssh\id_ed25519_pi_agents" piadmin@<IP_LOCAL>
+ssh pi-agents
 ```
 
-> El comando de autorización agrega la clave a `authorized_keys` y, si se ejecuta repetidamente, puede añadir duplicados. Inspeccionar el archivo antes de repetirlo.
-
-Para obligar a usar clave pública en una prueba (todavía pendiente de confirmación documentada):
+Desde una segunda conexión de Windows se puede comprobar la autenticación por clave y la identidad del equipo.
 
 ```powershell
-ssh -o PreferredAuthentications=publickey -o PasswordAuthentication=no pi-agents-local
+ssh -o PreferredAuthentications=publickey -o PasswordAuthentication=no pi-agents whoami
+ssh pi-agents hostname
 ```
 
-Solo tras comprobar con **una segunda sesión independiente** que la autenticación por clave funciona, se puede desactivar login SSH por contraseña en DietPi, por ejemplo:
+Las respuestas esperadas son `afvv2602` y `pi-agents`. La prueba acredita el método usado en esa conexión. El rechazo de contraseñas por el servidor sigue pendiente de verificación. Para un futuro endurecimiento, conservar una sesión funcional y comprobar el acceso desde una segunda sesión antes de cerrar la primera.
 
-```bash
-sudo /boot/dietpi/func/dietpi-set_software disable_ssh_password_logins 1
-```
+El [lanzador de doble clic](../scripts/conectar-pi-agents.bat) utiliza el mismo alias. Mantener la configuración real, las direcciones y las claves fuera del repositorio.
 
-Mantener abierta una sesión funcional durante el cambio, probar desde otra nueva y verificar la ruta de recuperación antes de cerrar la anterior. El comando procede de https://dietpi.com/docs/software/ssh/.
+## Diagnóstico de red y antecedente DHCP
 
-## Script opcional de doble clic
+Si hay un timeout, consultar en privado la IP actual de `wlan0` y la ruta con `ip -br -4 addr` e `ip route`. Desde Windows, comparar con `ipconfig` y probar el puerto del destino, por ejemplo con `Test-NetConnection`. Para un alias que no se reconoce, revisar el nombre del archivo `config` y la salida de `ssh -G pi-agents`.
 
-Ver [`scripts/conectar-pi-agents.bat`](../scripts/conectar-pi-agents.bat) para abrir SSH desde Windows con `ssh pi-agents-local`.
-
-## No confundir
-
-- La reserva DHCP ofrece estabilidad **solo en LAN**.
-- Tailscale aportará conectividad segura entre redes y una IP/nombre de tailnet.
-- No es necesario publicar TCP/22 en Internet.
+En la etapa DietPi se documentó una reserva habilitada para `wlan0` en el pool doméstico general del router Movistar (índice 3 de *LAN DHCP*, opción *Static Lease*). Los índices 0 y 1 tenían condiciones de fabricante y el 2 estaba deshabilitado. Falta revalidar la reserva en la nueva instalación. El usuario `piadmin` y el alias `pi-agents-local` identifican las pruebas históricas. [Incidencias anteriores](05-resolucion-problemas.md).
