@@ -4,6 +4,10 @@ El formato registra eventos **comprobados** separadamente de los planes.
 
 ## [Sin publicar]
 
+### 2026-11-10 · Controller v0.1
+
+- Incorporados FastAPI, Dockerfile, Compose y pruebas de salud y persistencia. El traspaso confirmó la construcción ARM64, la respuesta local y por túnel SSH y la conservación de `db_initialized_at` tras recrear el contenedor. Se observó un `Connection reset by peer` transitorio en la primera consulta. [Evidencia y reproducción](docs/08-controller.md).
+
 ### 2026-11-10 · Fase 4 del controlador completada
 
 - **VERIFICADO.** Docker ejecutó `hello-world` para ARM64. Docker Compose mostró `v5.7.0` y el servicio Docker estaba activo y habilitado. Su directorio de datos era `/var/lib/docker` en el SSD Kingston.

@@ -1,8 +1,8 @@
 # HOMELAB AI · DOSIER MAESTRO DEL PROYECTO
 
-**Versión:** 0.6 — Docker y persistencia de volúmenes verificados
+**Versión:** 0.7 — Controller v0.1 verificado
 **Fecha:** 10 de noviembre de 2026
-**Estado:** Fase 4 del controlador completada · SSD en seguimiento · API y sistema distribuido pendientes
+**Estado:** MVP de la fase 5 verificado · SSD en seguimiento · orquestación pendiente
 **Proyecto existente:** `pi-agents`
 **Repositorio:** https://github.com/afvv2602/pi-agents
 
@@ -261,7 +261,7 @@ El arranque remoto deberá respetar la configuración dual boot y no cambiar de 
 
 ## 4.1. Distribución lógica prevista
 
-En Raspberry Pi OS Lite se han verificado el arranque desde SSD, SSH por Tailscale desde la LAN y Docker con un volumen persistente. La API, el scheduler y los workers que se describen en estas capas siguen en diseño.
+En Raspberry Pi OS Lite se han verificado el arranque desde SSD, SSH por Tailscale desde la LAN y Docker con un volumen persistente. La primera API sirve `/health` y almacena metadatos en SQLite. El scheduler y los workers siguen en diseño.
 
 ### Capa 1 · Acceso y red
 
@@ -725,7 +725,7 @@ Los identificadores de la tabla pertenecen al briefing. Los [ADR técnicos del r
 | ADR-009 | Secundario como servidor/NAS | Propuesta |
 | ADR-010 | Debian 13 estable sin escritorio para el secundario, administrado por SSH | Establecida |
 | ADR-011 | Ubuntu Desktop para principal | Propuesta |
-| ADR-012 | FastAPI + SQLite para V1 | Propuesta |
+| ADR-012 | FastAPI + SQLite para V1 | Aplicada al MVP |
 | ADR-013 | Docker Compose antes de K3s | Propuesta |
 | ADR-014 | Ollama como motor de inferencia inicial | Propuesta |
 | ADR-015 | Integrar NATS cuando sea necesario | Diferida |
@@ -758,7 +758,7 @@ El proyecto debe justificar cada incorporación mediante necesidad y resultados 
 
 # 11. Hoja de ruta
 
-El [roadmap operativo](00-roadmap.md) numera las fases de la Raspberry según el chat principal. La fase 4 ha verificado Docker y Compose. Siguen pendientes la fase 5 (FastAPI y SQLite) y la fase 6 (orquestación y registro de nodos). El plan general del homelab que sigue mantiene su numeración original.
+El [roadmap operativo](00-roadmap.md) numera las fases de la Raspberry según el chat principal. La fase 4 ha verificado Docker y Compose. El MVP de la fase 5 verificó FastAPI y SQLite. La autenticación de gestión y la fase 6 (orquestación y registro de nodos) siguen pendientes. El plan general del homelab que sigue mantiene su numeración original.
 
 ## FASE 0 · Inventario y diseño
 
@@ -1168,4 +1168,8 @@ En «Instalación Raspberry Pi», el usuario confirmó que DietPi arrancó desde
 
 Las capturas de «Investiga distribuciones Raspberry Pi» documentan SSH por Tailscale desde Windows en LAN y la ejecución de `hello-world` para ARM64 en Raspberry Pi OS Lite. El servicio Docker estaba activo y habilitado. En el proyecto Compose de prueba, `probe` leyó el mismo marcador (`Tue Nov 10 01:24:11 UTC 2026`) antes y después de eliminar y recrear el contenedor. La fase 4 queda **VERIFICADA**. [Procedimiento y resultados de Docker](07-docker.md).
 
-La fase 5, correspondiente al primer controlador FastAPI con SQLite, sigue **PENDIENTE**. También quedan pendientes el acceso desde otra red, la reconexión tras reinicio y la validación prolongada del SSD en USB 2.0.
+Al cierre de la fase 4, la fase 5 estaba **PENDIENTE**. También quedan pendientes el acceso desde otra red, la reconexión tras reinicio y la validación prolongada del SSD en USB 2.0.
+
+## Registro de actualización · 10 de noviembre de 2026 · Controller v0.1
+
+**VERIFICADO.** La imagen `pi-agents-controller:0.1.0` respondió en loopback y por túnel SSH desde Windows en LAN. SQLite conservó `2026-11-10T01:31:36.328678+00:00` tras recrear el contenedor. La primera consulta tras arrancar sufrió un reset transitorio. Quedan pendientes autenticación de gestión, acceso externo, reconexión tras reiniciar y restauración de copias. [Guía del Controller](08-controller.md).

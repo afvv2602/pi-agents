@@ -65,6 +65,10 @@ El servicio estaba activo y habilitado en la prueba de SSH desde Windows en la L
 
 La fase 4 verificó la ejecución ARM64 y la persistencia de un volumen al recrear el contenedor. Para repetir las lecturas de servicio, ocupación y logs, consultar la [prueba de Docker y Compose](07-docker.md).
 
+## Controller v0.1
+
+Desde la raíz del repositorio, `docker compose -f infra/compose.yaml ps` muestra el estado y `docker compose -f infra/compose.yaml logs --tail=50 controller` consulta los registros. La guía incluye la construcción, la parada, la recreación con conservación del volumen y el diagnóstico del healthcheck. [Operación de Controller v0.1](08-controller.md).
+
 ## Seguridad
 
 - Nunca hacer commits de `~/.ssh`, contraseñas, tokens, credenciales o archivos `.env` reales.

@@ -2,6 +2,8 @@
 
 **Fase 3 · SSH por Tailscale verificado en LAN el 10 de noviembre de 2026.** En Raspberry Pi OS Lite, `tailscale status` mostró la Raspberry y el cliente Windows en la misma tailnet. `tailscaled` estaba `active` y `enabled`. Desde PowerShell se abrió una sesión SSH como `afvv2602` hacia la IP Tailscale de la Raspberry usando la identidad ED25519. OpenSSH reconoció la clave de host conocida por LAN. Faltan una prueba desde otra red y una reconexión después de reiniciar la Raspberry. [Decisión de acceso remoto](adr/0002-acceso-remoto-tailscale.md).
 
+El túnel con el alias `pi-agents-remote` permitió consultar `/health` desde Windows y leer la misma fecha de inicialización que en la Raspberry. [Comandos y resultado](08-controller.md).
+
 ## Evidencia histórica · DietPi en microSD
 
 El 29 de octubre se documentaron Tailscale 1.104.4, `tailscaled` activo y ambos dispositivos en la misma tailnet. En la LAN hubo ping en ambos sentidos por ruta directa, TCP/22 accesible y login de `piadmin` con clave pública. Quedaron pendientes la prueba desde otra red y la reconexión después de un reinicio. Las capturas y su alcance se describen en el [historial de cambios](../CHANGELOG.md).

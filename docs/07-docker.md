@@ -57,4 +57,4 @@ sudo docker compose logs probe
 
 El marcador sobrevivió a la recreación del contenedor. La prueba se hizo con `down` sin `-v` para conservar el volumen. La limpieza posterior del proyecto de prueba se propuso en el chat y queda sin confirmar. [Referencia de Docker Compose](https://docs.docker.com/reference/cli/docker/compose/down/).
 
-La estabilidad prolongada del SSD y la restauración de copias siguen abiertas. La fase 5 prevé comprobar `GET /health` y la persistencia de una base SQLite en el primer controlador FastAPI. [Roadmap del controlador](00-roadmap.md).
+La estabilidad prolongada del SSD y la restauración de copias siguen abiertas. La fase 5 verificó `GET /health` y la persistencia de SQLite en [Controller v0.1](08-controller.md). [Roadmap del controlador](00-roadmap.md).
