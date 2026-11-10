@@ -1,6 +1,6 @@
 # 05 — Incidentes y resolución de problemas
 
-Registro de incidencias observadas durante el montaje (2026-10-29). Las causas no verificadas se etiquetan como **hipótesis**.
+INC-001 a INC-005 corresponden al montaje de DietPi en octubre de 2026. INC-006 sigue el SSD hasta la instalación actual de Raspberry Pi OS Lite. Las causas sin confirmar se etiquetan como **hipótesis**.
 
 ## INC-001 — Fallo inicial de sincronización de hora
 
@@ -57,7 +57,7 @@ La ruta debe llamarse `config` sin extensión, con un bloque `Host` válido.
 **Observación:** `System clock synchronized: yes` junto a `NTP service: inactive`.\
 **Interpretación:** no demuestra por sí solo que la hora no se sincronice; DietPi puede utilizar mecanismos de sincronización diferentes a `systemd-timesyncd`.
 
-## INC-006 — SSD USB detectado pero sin montar (diagnóstico en curso)
+## INC-006 — Del volumen NTFS al arranque desde SSD por USB
 
 **Fecha:** 2026-10-29. **Síntoma inicial:** el usuario comunicó que el SSD conectado por USB «no lo reconoce». **Estado tras la captura de diagnóstico:** el sistema sí detecta el dispositivo y su partición, pero esta no está montada. No se ha determinado aún si hay un problema adicional de estabilidad.
 
@@ -81,7 +81,9 @@ Antes de compartir las salidas, ocultar números de serie, UUID y otros identifi
 
 **Conclusión parcial:** «no reconocido» describía la ausencia de acceso al volumen, no la ausencia de detección del hardware. El siguiente paso es aclarar si el disco contiene datos y si las desconexiones fueron intencionadas. Antes de usarlo para datos permanentes, comprobar estabilidad y alimentación. `vcgencmd get_throttled` es una comprobación de solo lectura que puede revelar episodios de subtensión de la Raspberry; un resultado normal no descarta por sí solo problemas de cable o alimentación del USB.
 
-La [documentación oficial de DietPi](https://dietpi.com/docs/dietpi_tools/system_configuration/) indica que `dietpi-drive_manager` permite inspeccionar y montar un disco detectado. **No montar ni formatear todavía** hasta conocer el contenido del NTFS y aclarar los eventos de desconexión.
+### Procedimiento histórico para el volumen NTFS en DietPi
+
+Estas indicaciones correspondían al disco antes de grabar la imagen. La [documentación oficial de DietPi](https://dietpi.com/docs/dietpi_tools/system_configuration/) indica que `dietpi-drive_manager` permite inspeccionar y montar un disco detectado. **No montar ni formatear todavía** hasta conocer el contenido del NTFS y aclarar los eventos de desconexión.
 
 - Si aparece en `lsblk` pero sin punto de montaje, comprobar sistema de archivos y usar `dietpi-drive_manager` para inspeccionar y, si procede, montar. En DietPi la falta de montaje no equivale a falta de detección. **Este es el caso observado.**
 - Si aparece en `lsusb` pero no en `lsblk`, revisar mensajes del kernel para errores de almacenamiento USB o de la carcasa/adaptador.
@@ -94,6 +96,14 @@ Referencias: [DietPi Drive Manager](https://dietpi.com/docs/dietpi_tools/system_
 ### Seguimiento de INC-006 · 9 de noviembre de 2026
 
 La observación de NTFS sin montar corresponde al diagnóstico anterior. El usuario comunicó que había grabado la imagen en el SSD. En USB 3.0 el chat de instalación recoge reinicios del enlace y errores de E/S; en USB 2.0 el usuario confirmó que DietPi arrancó. La causa del fallo en USB 3.0 y la estabilidad en uso prolongado continúan en pruebas. La última incidencia comunicada fue la dificultad para salir de DietPi-Config. Queda pendiente verificar desde la terminal el dispositivo raíz y registrar el resultado.
+
+### Seguimiento de INC-006 · 10 de noviembre de 2026
+
+Tras la migración a Raspberry Pi OS Lite, el reinicio posterior a la actualización terminó correctamente. El adaptador usa UAS en USB 2.0 a 480 Mb/s. El SSD aloja la raíz EXT4 en `/dev/sda2` y la partición de arranque en `/dev/sda1`, montada en `/boot/firmware`.
+
+En el registro filtrado del arranque observado no aparecieron errores de E/S ni EXT4. Se comunicaron avisos no críticos de MMC, audio, Bluetooth y Wi-Fi. `vcgencmd get_throttled` devolvió `0x0`.
+
+**Estado abierto.** Mantener USB 2.0 y registrar el periodo observado, los reinicios y cualquier desconexión o error durante el uso habitual. Quedan pendientes la estabilidad prolongada y la causa de los fallos anteriores en USB 3.0. [Comprobaciones de seguimiento](06-operaciones.md).
 
 ## Plantilla para nuevos incidentes
 

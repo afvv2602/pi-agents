@@ -1,29 +1,22 @@
 # Roadmap y criterios de aceptación
 
-> Las verificaciones de red y configuración de esta página corresponden a la instalación en microSD. El 9 de noviembre de 2026 se comunicó el primer arranque desde SSD por USB 2.0. La configuración y el acceso del nuevo sistema siguen pendientes de verificar. [Estado del controlador](dosier-maestro.md).
+Estado comunicado el 10 de noviembre de 2026 para el controlador `pi-agents`. La migración está **IMPLEMENTADA**. El reinicio tras actualizar, el arranque desde el SSD, la hora sincronizada y el acceso SSH con clave ED25519 están **VERIFICADOS**. El [dosier maestro](dosier-maestro.md) recoge las fases del homelab completo.
 
-El [dosier maestro](dosier-maestro.md) recoge las fases del homelab completo. Esta tabla sigue los hitos operativos de la Raspberry. Actualizado el 8 de noviembre de 2026. **✅** confirmado por la documentación de la instalación previa; **🟡** pendiente de verificar; **⏳** no implementado. Las pruebas recientes proceden de capturas del usuario; Codex no ha ejecutado comandos en la Raspberry.
+| Fase del controlador | Estado | Evidencia necesaria para cerrarla |
+|---|---|---|
+| 1. Estabilidad del SSD en USB 2.0 | EN PRUEBAS | Registrar el periodo observado y la carga habitual. Tras varios arranques, verificar ambos montajes, revisar si hay desconexiones USB, reinicios del enlace o errores de E/S y EXT4, y anotar el resultado de `vcgencmd get_throttled`. Mantener separado el diagnóstico de USB 3.0. |
+| 2. Tailscale sobre Raspberry Pi OS Lite | PENDIENTE | Comprobar paquete, servicio y adhesión a la tailnet. Validar ping, TCP/22 y SSH por clave en LAN y desde otra red. Repetir tras reiniciar y conservar SSH local sin publicar puertos. [Guía de pruebas](03-tailscale.md). |
+| 3. Docker Engine y Docker Compose | PENDIENTE | Registrar versiones de Engine y del complemento Compose. Ejecutar un servicio ARM64 de prueba, revisar sus logs y comprobar que recupera sus datos tras recrear el contenedor. |
+| 4. API y persistencia | PENDIENTE | Probar salud y autenticación de FastAPI en la red autorizada, incluido el rechazo de una petición sin autorización. Crear un registro de prueba en SQLite y recuperarlo tras reiniciar la aplicación. |
+| 5. Registro de nodos y orquestación | PENDIENTE | Registrar un worker y sus capacidades, observar su heartbeat y comprobar que el scheduler propio conserva un trabajo con el nodo ausente. Al volver el nodo, ejecutar el trabajo y registrar resultado y estado en la Raspberry. |
 
-| Hito | Estado | Criterio de aceptación verificable | Evidencia a registrar |
-|---|---|---|---|
-| 0. DietPi y red local | ✅ | Arranque headless, SSH desde Windows, hostname y hora correctos | Comandos redactados de sistema y sesión |
-| 1. Usuario y DHCP | ✅ | `piadmin` puede usar `sudo`; reserva asociada a `wlan0` | `sudo whoami`; prueba LAN tras nueva concesión |
-| 2. Estado de paquetes | 🟡 | APT sin tareas interrumpidas y actualizaciones revisadas | Fecha, versiones y resultado de revisión |
-| 3. SSH por clave | 🟡 | Nueva sesión con clave; contraseña de cuenta rechazada tras endurecimiento autorizado | Pruebas positivas y negativas, vía de recuperación |
-| 4. Tailscale | 🟡 | SSH por IP Tailscale desde otra red; servicio recuperado tras reinicio; SSH local conservado; sin puerto WAN publicado | Instalación, adhesión y login SSH por clave sobre Tailscale en LAN comprobados. Faltan red externa, reinicio y demás pruebas de [aceptación](03-tailscale.md#criterios-de-aceptación) |
-| 5. Copias y observabilidad | ⏳ | Backup fuera de microSD restaurado en prueba; espacio, logs y salud visibles | Registro de restauración y controles |
-| 6. Docker Compose | ⏳ | Imagen ARM64 de prueba arranca, reinicia, registra logs y conserva datos | Archivo Compose, comandos y salida redactada |
-| 7. API FastAPI | ⏳ | Healthcheck y endpoint autenticado; acceso limitado a la red autorizada | Pruebas de éxito y rechazo |
-| 8. Orquestador Python | ⏳ | Trabajo persistido en la Raspberry, ejecutado por un worker y recuperable ante desconexión | Pruebas automatizadas y diagrama |
-| 9. Obsidian | ⏳ | Lectura, dry-run, diff, aprobación y rollback sobre copia del vault | Pruebas sin datos privados |
-| 10. Inferencia local en el PC principal | ⏳ | Llamada a servicio remoto con timeouts y fallo controlado | Pruebas de error y rendimiento documentadas |
+En el último arranque, los registros filtrados estaban libres de errores de E/S y EXT4. Falta acordar y documentar el periodo de observación representativo para la fase 1. [Operación y seguimiento](06-operaciones.md).
 
-El 2026-10-29 se comprobaron el espacio libre, el reloj sincronizado y `sudo dpkg --audit` sin incidencias mediante captura del usuario. El hito 2 permanece 🟡 hasta revisar actualizaciones y versiones. Los hitos 2 y 3 se pueden verificar en paralelo con el hito 4, pero no se marcarán completados por el solo hecho de que Tailscale funcione. Ningún hito futuro implica despliegue automático del siguiente.
+## Controles y fases posteriores
 
-## Entregables de cada hito
+- **Administración.** Revalidar la reserva DHCP y el estado de paquetes. La autenticación con ED25519 está confirmada. El rechazo de contraseñas por el servidor requiere una prueba independiente.
+- **Copias y observabilidad.** Restaurar en prueba una copia externa al SSD del controlador y registrar espacio, logs y salud.
+- **Obsidian.** Probar lectura, simulación, diff, aprobación y recuperación sobre una copia del vault.
+- **Inferencia en el PC principal.** Documentar rendimiento, tiempos de espera y comportamiento cuando el nodo GPU esté apagado.
 
-Registrar objetivo, contexto, decisión y alternativas, instrucciones reproducibles, pruebas realmente ejecutadas, incidencias y soluciones, seguridad, cambios de arquitectura, entrada de CHANGELOG y siguiente paso. Sustituir en evidencias las IP, MAC, SSID, nombres de cuenta, tokens y contenido del vault.
-
-## Próximo paso
-
-Conectar Windows a una red distinta de la LAN y repetir `tailscale ping`, TCP/22 y SSH por clave hacia la dirección Tailscale. El usuario ejecuta los comandos y comparte resultados redactados; ver la [guía de Tailscale](03-tailscale.md).
+Registrar fecha, procedimiento, resultado y alcance de cada prueba. Compartir únicamente evidencias sin direcciones reales, MAC, SSID, claves, tokens ni contenido privado. Las pruebas de Tailscale en DietPi se conservan en el [historial](../CHANGELOG.md).

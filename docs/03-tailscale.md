@@ -1,119 +1,52 @@
 # 03 — Acceso remoto con Tailscale
 
-> Las verificaciones de red y configuración de esta página corresponden a la instalación en microSD. El 9 de noviembre de 2026 se comunicó el primer arranque desde SSD por USB 2.0. La configuración y el acceso del nuevo sistema siguen pendientes de verificar. [Estado del controlador](dosier-maestro.md).
+**PENDIENTE en Raspberry Pi OS Lite.** Falta verificar el paquete, el servicio, la adhesión del controlador a la tailnet y el acceso desde Windows. Se mantiene como objetivo SSH convencional sobre la red privada con la cuenta `afvv2602`, sin publicar TCP/22. [Decisión de acceso remoto](adr/0002-acceso-remoto-tailscale.md).
 
-**Estado: SSH por clave sobre Tailscale comprobado desde Windows en LAN.** Acceso desde otra red y recuperación tras reinicio siguen pendientes. Guía revisada el 2026-10-29 contra documentación oficial. El usuario ejecuta los comandos y comparte resultados; Codex documenta los resultados y prepara los siguientes pasos.
+## Evidencia histórica · DietPi en microSD
 
-## Objetivo y decisiones
+El 29 de octubre se documentaron Tailscale 1.104.4, `tailscaled` activo y ambos dispositivos en la misma tailnet. En la LAN hubo ping en ambos sentidos por ruta directa, TCP/22 accesible y login de `piadmin` con clave pública. Quedaron pendientes la prueba desde otra red y la reconexión después de un reinicio. Las capturas y su alcance se describen en el [historial de cambios](../CHANGELOG.md).
 
-Acceder a `pi-agents` por SSH convencional desde Windows, incluso fuera de la LAN, sin redirigir TCP/22 en el router. Mantener `ssh pi-agents-local` operativo. No activar Tailscale SSH (`tailscale set --ssh`), exit node ni subnet router. Ver [ADR-0002](adr/0002-acceso-remoto-tailscale.md).
+## Preparación e instalación para la fase pendiente
 
-## 0. Antes de instalar (comprobado parcialmente el 2026-10-29)
-
-Desde PowerShell, comprobar `ssh pi-agents-local` y conservar esa sesión abierta durante la instalación. En la Raspberry, revisar:
-
-```bash
-hostname
-cat /etc/os-release
-df -h /
-timedatectl status
-sudo dpkg --audit
-```
-
-Confirmar espacio libre, hora sincronizada y ausencia de paquetes a medio configurar. Si aparece un problema, resolverlo antes de seguir.
-
-**Resultados observados en captura aportada por el usuario (2026-10-29):** sesión SSH como `piadmin` en `pi-agents`; `hostname` devuelve `pi-agents`; `/etc/os-release` indica Debian GNU/Linux 13 (Trixie), versión completa 13.7; la raíz tiene aproximadamente 55 GB libres (2 % de uso); `timedatectl status` muestra `Europe/Madrid` y `System clock synchronized: yes`; `sudo dpkg --audit` termina sin salida. `NTP service: inactive` también aparece, pero no contradice por sí solo el estado sincronizado. La captura **no** confirma la versión de DietPi, el nivel de actualizaciones APT ni que SSH use exclusivamente clave.
-
-**Siguiente paso realizado:** el usuario instaló Tailscale mediante `sudo dietpi-software`, manteniendo disponible SSH local.
-
-## 1. Instalar en DietPi (completado el 2026-10-29)
-
-La [guía oficial de DietPi](https://dietpi.com/docs/software/vpn/) incluye Tailscale entre sus paquetes optimizados. Desde la sesión SSH local:
-
-```bash
-sudo dietpi-software
-```
-
-Seleccionar **Browse Software → Tailscale → Install** y confirmar el paquete elegido. Usamos la integración de DietPi en lugar del script genérico de [instalación Linux](https://tailscale.com/docs/install/linux).
-
-```bash
-systemctl is-active tailscaled
-tailscale version
-```
-
-Si el servicio no está activo, revisar `sudo systemctl status tailscaled` y `sudo journalctl -u tailscaled --no-pager -n 50` antes de avanzar.
-
-**Resultado observado en captura aportada por el usuario:** DietPi-Software indica `Install completed`; `systemctl is-active tailscaled` devuelve `active`; `tailscale version` informa 1.104.4. Esto verifica instalación y servicio activo en ese momento, pero no confirma aún que la Raspberry esté unida a la tailnet ni que el servicio sobreviva a un reinicio.
-
-## 2. Unir la Raspberry a la tailnet (completado el 2026-10-29)
-
-```bash
-sudo tailscale up
-tailscale status
-tailscale ip -4
-```
-
-Abrir en el navegador la URL de autenticación que muestre `tailscale up`, usando la cuenta/tailnet prevista. Confirmar el dispositivo en **Machines** de la consola. Si se exige aprobación, completarla allí y repetir `tailscale status`. Guardar la IP Tailscale solo en configuración privada. No publicar URL de autenticación, claves ni capturas sin redactar.
-
-**Resultado observado en capturas aportadas por el usuario:** `sudo tailscale up` devolvió `Success`; `tailscale status` enumera `pi-agents` y `tailscale ip -4` devolvió una dirección de la tailnet. La consola **Machines** muestra `pi-agents` como **Connected**, con versión 1.104.4. No se publica la dirección, identidad de cuenta ni URL de autenticación visibles en las capturas. En ese momento solo aparece un dispositivo; aún no se ha probado conexión entre equipos.
-
-## 3. Windows y prueba de conectividad (ping, TCP/22 y SSH comprobados en LAN)
-
-Instalar el cliente según la [guía oficial para Windows](https://tailscale.com/docs/install/windows) e iniciar sesión en la misma tailnet. Comprobar ambos equipos en la aplicación y en **Machines**. Desde PowerShell:
-
-**Resultados observados en capturas aportadas por el usuario (2026-10-29):** `tailscale status` ejecutado en Windows enumera ambos dispositivos en la misma tailnet. Después, `tailscale ping` respondió de Windows a `pi-agents` y de la Raspberry a Windows, con ruta directa por direcciones LAN. Esto prueba conectividad Tailscale entre ambos en la red actual; no prueba TCP/22, login SSH ni alcance desde otra red. Se omiten direcciones e identidad de cuenta del repositorio.
-
-**Prueba posterior:** `Test-NetConnection <TAILSCALE_IP> -Port 22` desde PowerShell devolvió `TcpTestSucceeded: True` y mostró `InterfaceAlias: Tailscale`. El puerto SSH de la Raspberry era alcanzable a través de la interfaz Tailscale en la red actual. En ese momento aún no se había probado autenticación SSH ni acceso desde fuera de la LAN.
-
-**Login SSH posterior:** una captura muestra una sesión `piadmin@pi-agents` abierta desde Windows hacia la IP Tailscale. El comando limitó la autenticación a clave pública, deshabilitó contraseña de cuenta y `keyboard-interactive`, y solicitó la frase de paso de la clave privada local. La huella del host coincidía con una entrada ya conocida por la dirección LAN y el usuario confirmó la nueva entrada para la IP Tailscale. Esto comprueba autenticación por clave en esta sesión; **no** demuestra que el servidor ya rechace contraseñas en otras conexiones. El banner confirmó DietPi v10.8.2 en Raspberry Pi 4 ARM64. También mostró una advertencia de temperatura de CPU (62 °C), pendiente de seguimiento; no se ha diagnosticado su causa. La captura contenía direcciones y huella SSH que no se publican aquí.
-
-```powershell
-tailscale status
-tailscale ping <TAILSCALE_IP>
-Test-NetConnection <TAILSCALE_IP> -Port 22
-ssh -o PreferredAuthentications=publickey -o PasswordAuthentication=no -i "$env:USERPROFILE\.ssh\id_ed25519_pi_agents" piadmin@<TAILSCALE_IP>
-```
-
-`tailscale ping` verifica la ruta privada; `Test-NetConnection` comprueba TCP/22; solo el último comando prueba el login SSH con clave. Una petición de frase de paso de la clave local es normal. Si falla SSH, revisar políticas de acceso de la tailnet, servidor, usuario y clave antes de atribuir el fallo a Tailscale.
-
-Con SSH por IP funcionando, añadir un alias **privado** a `%USERPROFILE%\.ssh\config`:
+1. Desde la LAN, comprobar `ssh pi-agents` y conservar abierta esa sesión. En la Raspberry, revisar `cat /etc/os-release`, `dpkg --print-architecture`, `df -h /`, `timedatectl status` y `sudo dpkg --audit`.
+2. Comprobar primero si existe el paquete con `dpkg-query -W tailscale` y si hay servicio con `systemctl is-active tailscaled`. Si falta el paquete, seguir los pasos de APT publicados para Debian Trixie, con su clave de firma y repositorio. Registrar la versión con `tailscale version` y comprobar el servicio. [Paquetes oficiales para Debian Trixie](https://pkgs.tailscale.com/stable/#debian-trixie).
+3. Comprobar la adhesión con `tailscale status`. Si el nodo requiere autenticación, usar `sudo tailscale up` y completar el acceso a la tailnet prevista. Identificar el nodo nuevo en **Machines** y obtener su dirección con `tailscale ip -4`. Mantener la dirección, la identidad de cuenta y la URL de autenticación en privado.
+4. Comprobar que el cliente de Windows está en la misma tailnet. Mantener el alias LAN `pi-agents` y definir un segundo bloque en el archivo de configuración de OpenSSH para distinguir las dos rutas. [Instalación para Windows](https://tailscale.com/docs/install/windows) · [Configuración del cliente SSH](02-red-y-ssh.md).
 
 ```sshconfig
 Host pi-agents-remote
     HostName <TAILSCALE_IP>
-    User piadmin
+    User afvv2602
     IdentityFile ~/.ssh/id_ed25519_pi_agents
     IdentitiesOnly yes
 ```
 
-Probar `ssh pi-agents-remote` y verificar la clave de host SSH de la nueva dirección.
+## Pruebas desde Windows
 
-## 4. MagicDNS (opcional, pendiente)
+Sustituir el marcador por la dirección privada del nodo actual y utilizar esa misma dirección en `HostName`. Verificar la huella de host antes de aceptar una entrada nueva.
 
-Revisar en **DNS** de la consola si [MagicDNS](https://tailscale.com/docs/features/magicdns) está activado; en tailnets nuevas suele estarlo. Confirmar en **Machines** el nombre real del dispositivo y probar su nombre o FQDN. Mantener el alias por IP hasta validar resolución y SSH. No suponer que el hostname Linux y el nombre de tailnet coinciden.
+```powershell
+$destinoPi = '<TAILSCALE_IP>'
+tailscale status
+tailscale ping $destinoPi
+Test-NetConnection -ComputerName $destinoPi -Port 22
+ssh -o PreferredAuthentications=publickey -o PasswordAuthentication=no pi-agents-remote whoami
+ssh pi-agents-remote hostname
+```
 
-## 5. Prueba externa y reinicio (pendientes)
-
-1. Conectar Windows a otra red, por ejemplo un hotspot móvil, y desconectarlo de la LAN doméstica.
-2. Repetir `tailscale ping <TAILSCALE_IP>`, `Test-NetConnection <TAILSCALE_IP> -Port 22` y SSH por clave. En la sesión ejecutar `hostname` y `whoami`; esperar `pi-agents` y `piadmin`. No usar la IP LAN.
-3. Confirmar que el router no tiene redirección de TCP/22.
-4. En una ventana autorizada, reiniciar la Raspberry. Repetir `systemctl is-active tailscaled`, `tailscale status`, SSH por Tailscale y `ssh pi-agents-local` desde LAN.
-5. Registrar fecha, versiones, resultados y fallos aquí y en CHANGELOG, redactando valores privados.
+El ping comprueba la ruta, TCP/22 la disponibilidad del puerto y la sesión SSH la autenticación. Los resultados esperados de identidad son `afvv2602` y `pi-agents`. [SSH sobre Tailscale](https://tailscale.com/docs/reference/ssh-over-tailscale).
 
 ## Criterios de aceptación
 
-- [x] `tailscaled` activo y ambos equipos visibles en la misma tailnet.
-- [x] `tailscale ping` y TCP/22 correctos desde Windows en LAN.
-- [x] SSH convencional por Tailscale con `piadmin` y clave pública, sin contraseña de cuenta en la prueba LAN.
-- [ ] La conexión funciona desde una red externa.
-- [ ] Tras reiniciar, Tailscale y el SSH local y remoto siguen disponibles.
-- [ ] Sin port forwarding de TCP/22, exit node, subnet router ni Tailscale SSH.
-- [ ] Versiones, pruebas, fallos y método de revocación documentados.
+- [ ] Registrar versión, `tailscaled` activo y los dos equipos visibles en la misma tailnet.
+- [ ] En LAN, verificar ping en ambos sentidos y TCP/22 y login SSH por clave desde Windows hacia la dirección Tailscale.
+- [ ] Desconectar Windows de la LAN doméstica y repetir ping, TCP/22 y SSH desde otra red.
+- [ ] Tras un reinicio planificado de la Raspberry, comprobar el servicio, el acceso por la tailnet y el acceso por `ssh pi-agents` desde la LAN.
+- [ ] Confirmar que no hay redirección WAN de TCP/22. Mantener el alcance acordado sin Tailscale SSH, exit node ni subnet router.
+- [ ] Documentar fecha, versiones, resultados y procedimiento de revocación, omitiendo datos privados.
 
-## Seguridad y recuperación
+## Recuperación y nombres
 
-La tailnet limita conectividad según sus [políticas de acceso](https://tailscale.com/docs/reference/ssh-over-tailscale); OpenSSH sigue autenticando al usuario. Si se pierde un cliente, revocarlo desde **Machines** y revisar su clave SSH. La [caducidad de claves de dispositivo](https://tailscale.com/docs/features/access-control/key-expiry) puede interrumpir un servidor desatendido; evaluar su configuración y documentar la decisión, sin desactivarla por defecto.
+Si falla la conexión privada, volver a la LAN con `ssh pi-agents`. Revisar `systemctl status tailscaled`, `sudo journalctl -u tailscaled --no-pager -n 50` y las políticas de la tailnet. Si se pierde un cliente, revocarlo en **Machines** y revisar su autorización SSH. Documentar la política de caducidad del nodo desatendido. [Caducidad de claves de dispositivo](https://tailscale.com/docs/features/access-control/key-expiry).
 
-Si falla el acceso remoto, volver a `ssh pi-agents-local` desde la LAN y revisar `tailscaled` y sus logs. No alterar el acceso SSH local durante este hito.
-
-**Fuentes oficiales consultadas:** [DietPi VPN/Tailscale](https://dietpi.com/docs/software/vpn/), [DietPi Software](https://dietpi.com/docs/dietpi_tools/software_installation/), [Tailscale Linux](https://tailscale.com/docs/install/linux), [Tailscale Windows](https://tailscale.com/docs/install/windows), [SSH sobre Tailscale](https://tailscale.com/docs/reference/ssh-over-tailscale), [MagicDNS](https://tailscale.com/docs/features/magicdns), [CLI](https://tailscale.com/docs/reference/tailscale-cli).
+MagicDNS queda como opción posterior. Antes de cambiar el alias por IP, verificar el nombre real del dispositivo, su resolución y el login SSH. [MagicDNS](https://tailscale.com/docs/features/magicdns).

@@ -1,17 +1,17 @@
 # ADR-0002 — Acceso remoto mediante Tailscale
 
 - Fecha: 2026-10-29
-- Estado: **Propuesta; instalación pendiente**
+- Estado: **Elección de red privada vigente. Verificación pendiente en Raspberry Pi OS Lite**
 
 ## Contexto
 
-Se requiere administración SSH desde redes distintas a la LAN sin exponer el puerto 22 públicamente. La red usa un router doméstico Movistar con reserva DHCP local.
+Se requiere administración SSH desde redes distintas a la LAN sin exponer el puerto 22 públicamente. La reserva DHCP del router doméstico se documentó durante la etapa DietPi.
 
-## Decisión propuesta
+## Decisión
 
-Adoptar Tailscale como red privada entre Windows y Raspberry; mantener inicialmente el servidor OpenSSH y la autenticación por clave sobre la interfaz privada. MagicDNS es opcional y se utilizará solo tras verificar resolución. Mantener el alias SSH local durante la instalación y la prueba externa.
+Adoptar Tailscale como red privada entre Windows y Raspberry y mantener inicialmente el servidor OpenSSH y la autenticación por clave sobre la interfaz privada. MagicDNS es opcional y se utilizará solo tras verificar resolución. Mantener el alias SSH local durante la instalación y la prueba externa.
 
-No activar Tailscale SSH, exit node ni subnet router en este hito: añaden capacidades que el caso de uso actual no necesita. La instalación se hará con `dietpi-software`, siguiendo el paquete optimizado de DietPi.
+El alcance se limita a OpenSSH convencional sobre la red privada, sin Tailscale SSH, exit node ni subnet router. El paquete para Debian 13 Trixie es la referencia para Raspberry Pi OS Lite. En DietPi se verificó SSH sobre Tailscale desde la LAN. En el nuevo sistema siguen pendientes instalación, adhesión y pruebas de acceso.
 
 ## Alternativas
 

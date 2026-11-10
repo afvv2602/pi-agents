@@ -1,7 +1,7 @@
 # ADR-0001 — Elegir DietPi como sistema base
 
 - Fecha: 2026-10-29
-- Estado: **Aceptada y aplicada**
+- Estado: **Sustituida el 2026-11-10 por [ADR-0003](0003-raspberry-pi-os-lite.md)**. Se conserva la decisión aplicada en la instalación anterior.
 
 ## Contexto
 
